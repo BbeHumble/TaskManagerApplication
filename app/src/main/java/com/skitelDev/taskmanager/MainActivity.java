@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public void insertIntoTaskList(String taskText, int tasklistid) {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         db.execSQL("INSERT INTO task(text) VALUES ('" + taskText + "');");
-        Long index = findLastTaskID();
+        long index = findLastTaskID();
         db.execSQL("INSERT INTO tasklist(id, taskid) VALUES (" + tasklistid + "," + index + ");");
         db.close();
     }

@@ -1,8 +1,8 @@
 package com.skitelDev.taskmanager.entities;
 
 public class Task {
-    int id;
-    String text;
+    private int id;
+    private String text;
 
     public Task(int id, String text) {
         this.id = id;
