@@ -14,14 +14,16 @@ import com.skitelDev.taskmanager.entities.Task;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         createDatabase();
         ArrayList<Task> list = new ArrayList();
         insertIntoTaskList("новый таск", 1);
-        list = getTaskFromList(2);
+        list = getTaskFromList(1);
         for (Task task : list) {
             Log.println(Log.ERROR, "MESSAGE", task.getId() + " " + task.getText());
         }
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             while (query.moveToNext());
         }
         query.close();
+        db.close();
         return tasks;
     }
 
@@ -59,12 +62,14 @@ public class MainActivity extends AppCompatActivity {
         db.execSQL("INSERT INTO task(text) VALUES ('" + taskText + "');");
         Long index = findLastTaskID();
         db.execSQL("INSERT INTO tasklist(id, taskid) VALUES (" + tasklistid + "," + index + ");");
+        db.close();
     }
 
     public long findLastTaskID() {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT * FROM task;", null);
         cursor.moveToLast();
+        db.close();
         return cursor.getLong(0);
     }
 
