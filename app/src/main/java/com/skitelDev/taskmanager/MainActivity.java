@@ -27,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
 //        insertIntoTaskList("123 таск", 1);
 //        insertIntoTaskList("нов123ый таск", 1);
 //        insertIntoTaskList("123 таск", 1);
-
-        deleteTaskById(3);
+        Task task = findTaskByText("123 таск");
+        Log.println(Log.ERROR, "out", task.getId() + " " + task.getText());
+//        deleteTaskByName("новый таск");
         list = getTaskFromList(1);
         TaskListLoader(list);
     }
@@ -84,14 +85,38 @@ public class MainActivity extends AppCompatActivity {
         db.close();
         return cursor.getLong(0);
     }
-    public void deleteTaskById(int id){
+
+    public void deleteTaskById(int id) {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-        db.execSQL("DELETE FROM task WHERE id ="+ id + ";");
+        db.execSQL("DELETE FROM task WHERE id =" + id + ";");
     }
-    public void deleteTaskByName(String text){
+
+    public void deleteTaskByName(String text) {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-        db.execSQL("DELETE FROM task WHERE text ="+ text + ";");
+        db.execSQL("DELETE FROM task WHERE text ='" + text + "';");
     }
-    
+
+    public Task findTaskById(int id) {
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM task " +
+                "WHERE id =" + id + ";", null);
+        cursor.moveToFirst();
+        int resid = cursor.getInt(0);
+        String restext = cursor.getString(1);
+        db.close();
+        return new Task(resid, restext);
+
+    }
+    public Task findTaskByText(String text){
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM task " +
+                "WHERE text ='" + text + "';", null);
+        cursor.moveToFirst();
+        int resid = cursor.getInt(0);
+        String restext = cursor.getString(1);
+        db.close();
+        return new Task(resid, restext);
+    }
+
 
 }
