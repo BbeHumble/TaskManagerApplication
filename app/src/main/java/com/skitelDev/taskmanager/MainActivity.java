@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.skitelDev.taskmanager.entities.Task;
 
@@ -19,9 +18,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         createDatabase();
-        ArrayList<Task> list = new ArrayList();
+        ArrayList<Task> list;
         insertIntoTaskList("новый таск", 1);
         list = getTaskFromList(1);
         for (Task task : list) {
