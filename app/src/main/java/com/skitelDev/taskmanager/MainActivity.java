@@ -2,6 +2,8 @@
 package com.skitelDev.taskmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +15,7 @@ import com.skitelDev.taskmanager.entities.Task;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +25,15 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Task> list;
         insertIntoTaskList("новый таск", 1);
         list = getTaskFromList(1);
-        for (Task task : list) {
-            Log.println(Log.ERROR, "MESSAGE", task.getId() + " " + task.getText());
-        }
+        TaskListLoader(list);
+    }
+
+    private void TaskListLoader(ArrayList<Task> list) {
+        recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager1);
+        TaskListAdapter mAdapter = new TaskListAdapter(getApplicationContext(), list);
+        recyclerView.setAdapter(mAdapter);
     }
 
     public void createDatabase() {
