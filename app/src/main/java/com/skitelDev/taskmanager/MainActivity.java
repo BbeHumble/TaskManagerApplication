@@ -23,7 +23,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         createDatabase();
         ArrayList<Task> list;
-        insertIntoTaskList("новый таск", 1);
+//        insertIntoTaskList("новый таск", 1);
+//        insertIntoTaskList("123 таск", 1);
+//        insertIntoTaskList("нов123ый таск", 1);
+//        insertIntoTaskList("123 таск", 1);
+
+        deleteTaskById(3);
         list = getTaskFromList(1);
         TaskListLoader(list);
     }
@@ -79,5 +84,14 @@ public class MainActivity extends AppCompatActivity {
         db.close();
         return cursor.getLong(0);
     }
+    public void deleteTaskById(int id){
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("DELETE FROM task WHERE id ="+ id + ";");
+    }
+    public void deleteTaskByName(String text){
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("DELETE FROM task WHERE text ="+ text + ";");
+    }
+    
 
 }

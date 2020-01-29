@@ -33,7 +33,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        holder.textView.setText(mDataset.get(position).getText());
+        holder.textView.setText(mDataset.get(position).getText()+" " +mDataset.get(position).getId());
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
