@@ -27,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
 //        insertIntoTaskList("123 таск", 1);
 //        insertIntoTaskList("нов123ый таск", 1);
 //        insertIntoTaskList("123 таск", 1);
-        Task task = findTaskByText("123 таск");
-        Log.println(Log.ERROR, "out", task.getId() + " " + task.getText());
+//        Task task = findTaskByText("123 таск");
+//        Log.println(Log.ERROR, "out", task.getId() + " " + task.getText());
 //        deleteTaskByName("новый таск");
+//            updateTaskbyId(4,"edited");
+        updateTaskbyText("edited","onemoretime");
         list = getTaskFromList(1);
         TaskListLoader(list);
     }
@@ -117,6 +119,19 @@ public class MainActivity extends AppCompatActivity {
         db.close();
         return new Task(resid, restext);
     }
+    public void updateTaskbyId(int id, String text){
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("UPDATE task " +
+                "SET text = '"+ text +"' " +
+                "WHERE id = "+id+";");
+    }
+    public void updateTaskbyText(String prev, String next){
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("UPDATE task " +
+                "SET text = '"+ next +"' " +
+                "WHERE text = '"+prev+"';");
+    }
+    
 
 
 }
