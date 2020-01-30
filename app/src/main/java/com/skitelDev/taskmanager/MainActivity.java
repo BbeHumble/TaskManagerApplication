@@ -8,32 +8,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-
+    LinearLayout bottomsheet;
+    Button addButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bottomSheet();
+        
         createDatabase();
-        ArrayList<Task> list;
-//        insertIntoTaskList("новый таск", 1);
-//        insertIntoTaskList("123 таск", 1);
-//        insertIntoTaskList("нов123ый таск", 1);
-//        insertIntoTaskList("123 таск", 1);
-//        Task task = findTaskByText("123 таск");
-//        Log.println(Log.ERROR, "out", task.getId() + " " + task.getText());
-//        deleteTaskByName("новый таск");
-//            updateTaskbyId(4,"edited");
-        updateTaskbyText("edited","onemoretime");
-        list = getTaskFromList(1);
+        ArrayList<Task> list = getTaskFromList(1);
         TaskListLoader(list);
+    }
+
+    private void bottomSheet() {
+        bottomsheet = findViewById(R.id.bottom_sheet);
+        addButton = findViewById(R.id.button);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
     }
 
     private void TaskListLoader(ArrayList<Task> list) {

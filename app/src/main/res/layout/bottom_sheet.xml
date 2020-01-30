@@ -7,16 +7,14 @@
     android:background="@android:color/darker_gray"
     android:orientation="vertical"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="80dp"
+    app:behavior_peekHeight="100dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <TextView
+    <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="123"
-        android:textColor="@android:color/white" />
+        android:layout_height="100dp"
+        android:text="Button" />
 
     <TextView
         android:layout_width="match_parent"
