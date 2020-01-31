@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="340dp"
+    android:layout_height="280dp"
     android:background="@android:color/darker_gray"
     android:orientation="vertical"
     app:behavior_hideable="true"
@@ -16,11 +16,21 @@
         android:layout_height="100dp"
         android:text="Button" />
 
-    <TextView
+    <EditText
+        android:id="@+id/newTaskTextField"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="123"
-        android:textColor="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:enabled="true" android:gravity="center"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/savebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="330dp"
+        android:layout_marginTop="60dp"
+        android:text="save" />
 
 </LinearLayout>

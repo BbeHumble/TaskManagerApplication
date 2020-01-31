@@ -11,7 +11,6 @@ public class API {
     public static void createDatabase(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS task (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)"); // для каждой конкретной задачи
         db.execSQL("CREATE TABLE IF NOT EXISTS tasklist (id INTEGER, taskid INTEGER)");// таблица со списками таск листов(id - id листа - taskid - id таска, который содержится в листе
-        db.close();
     }
 
     //Получение списка задач по id списка
@@ -30,7 +29,7 @@ public class API {
             while (query.moveToNext());
         }
         query.close();
-        db.close();
+
         return tasks;
     }
 
@@ -38,13 +37,12 @@ public class API {
         db.execSQL("INSERT INTO task(text) VALUES ('" + taskText + "');");
         long index = findLastTaskID(db);
         db.execSQL("INSERT INTO tasklist(id, taskid) VALUES (" + tasklistid + "," + index + ");");
-        db.close();
+
     }
 
     public static long findLastTaskID(SQLiteDatabase db) {
         Cursor cursor = db.rawQuery("SELECT * FROM task;", null);
         cursor.moveToLast();
-        db.close();
         return cursor.getLong(0);
     }
 
@@ -62,7 +60,6 @@ public class API {
         cursor.moveToFirst();
         int resid = cursor.getInt(0);
         String restext = cursor.getString(1);
-        db.close();
         return new Task(resid, restext);
 
     }
@@ -72,7 +69,7 @@ public class API {
         cursor.moveToFirst();
         int resid = cursor.getInt(0);
         String restext = cursor.getString(1);
-        db.close();
+
         return new Task(resid, restext);
     }
     public static void updateTaskbyId(SQLiteDatabase db, int id, String text){
