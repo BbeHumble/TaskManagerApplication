@@ -7,11 +7,13 @@
 
     <EditText
         android:id="@+id/taskTitle"
+        style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
-        android:inputType="textPersonName" />
+        android:inputType="text"
+        android:textSize="14sp" />
 
     <CheckBox
         android:id="@+id/checkBox"

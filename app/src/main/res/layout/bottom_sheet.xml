@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="280dp"
-    android:background="@android:color/darker_gray"
+    android:layout_height="230dp"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
-    app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -16,15 +15,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:ems="10"
-        android:enabled="true" android:gravity="center"
+        android:enabled="true"
+        android:gravity="center"
         android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/savebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="330dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="60dp"
         android:text="save" />
 
-</LinearLayout>
+</RelativeLayout>
