@@ -8,11 +8,19 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginTop="1dp" >
+        android:layout_width="443dp"
+        android:layout_height="564dp"
+        android:layout_marginTop="1dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <Button
+        android:id="@+id/addbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Button" />
+
     <include layout="@layout/bottom_sheet" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

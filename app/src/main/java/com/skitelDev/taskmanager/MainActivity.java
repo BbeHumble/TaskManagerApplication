@@ -1,6 +1,7 @@
 
 package com.skitelDev.taskmanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -38,19 +40,34 @@ public class MainActivity extends AppCompatActivity {
         API.createDatabase(db);
         ArrayList<Task> list = API.getTaskFromList(db, 1);
         TaskListLoader(list);
+
+    }
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                v.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+            }
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
     private void bottomSheet() {
         bottomsheet = findViewById(R.id.bottom_sheet);
         Button save = findViewById(R.id.savebutton);
         bottomsheet.clearFocus();
-        addButton = findViewById(R.id.button);
+        addButton = findViewById(R.id.addbutton);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                addButton.setVisibility(View.GONE);
+                addButton.setVisibility(View.INVISIBLE);
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -61,14 +78,19 @@ public class MainActivity extends AppCompatActivity {
                 API.insertIntoTaskList(db,editText.getText().toString(),1);
                 ArrayList<Task> list = API.getTaskFromList(db, 1);
                 TaskListLoader(list);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                addButton.setVisibility(View.VISIBLE);
 //         TODO: ТУТ НАДО ЧТО-ТО СДЕЛАТЬ
+
 
             }
         });
 
+
     }
 
     private void TaskListLoader(ArrayList<Task> list) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager1);

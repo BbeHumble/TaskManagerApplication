@@ -19,7 +19,8 @@ public class API {
         Cursor query = db.rawQuery("SELECT * FROM task " +
                 "JOIN tasklist " +
                 "ON tasklist.taskid == task.id " +
-                "WHERE tasklist.id == " + taskListId, null);
+                "WHERE tasklist.id == " + taskListId +
+                " ORDER BY id DESC", null);
         if (query.moveToFirst()) {
             do {
                 int id = query.getInt(0);
