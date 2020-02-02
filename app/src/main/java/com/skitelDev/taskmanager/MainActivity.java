@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         bottomsheet = findViewById(R.id.bottom_sheet);
         Button save = findViewById(R.id.savebutton);
         bottomsheet.clearFocus();
-        final RelativeLayout relativeLayout = findViewById(R.id.mainLayout);
         addButton = findViewById(R.id.addbutton);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
         addButton.setOnClickListener(new View.OnClickListener() {
