@@ -7,6 +7,8 @@ import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class API {
     public static void createDatabase(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS task (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)"); // для каждой конкретной задачи
@@ -82,6 +84,15 @@ public class API {
         db.execSQL("UPDATE task " +
                 "SET text = '"+ next +"' " +
                 "WHERE text = '"+prev+"';");
+    }
+    public static void saveAll(SQLiteDatabase db, int idTaskList, ArrayList<Task> tasks){
+        ArrayList<Task> tasks1 = getTaskFromList(db,idTaskList);
+        for (Task task : tasks1){
+            deleteTaskById(db, task.getId());
+        }
+        for (int i = 0; i <tasks.size() ; i++) {
+            insertIntoTaskList(db,tasks.get(i).getText(),idTaskList);
+        }
     }
 
 }

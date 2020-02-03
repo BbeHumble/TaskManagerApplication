@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
+import android.renderscript.BaseObj;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,12 +37,16 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RelativeLayout bottomsheet;
     Button addButton;
+    BottomSheetBehavior bottomSheetBehavior;
+    static SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bottomsheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
         bottomSheet();
-        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         API.createDatabase(db);
         ArrayList<Task> list = API.getTaskFromList(db, 1);
         TaskListLoader(list);
@@ -61,31 +66,41 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        else {
+            super.onBackPressed();
+        }
+
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
         recyclerView = findViewById(R.id.recycler_view);
         bottomsheet = findViewById(R.id.bottom_sheet);
         Button save = findViewById(R.id.savebutton);
-        bottomsheet.clearFocus();
+
         addButton = findViewById(R.id.addbutton);
         final RelativeLayout relativeLayout = findViewById(R.id.frame);
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TaskListLoader(TaskListAdapter.mDataset);
                 relativeLayout.bringToFront();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 addButton.setVisibility(View.INVISIBLE);
+
             }
         });
+
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText editText = findViewById(R.id.newTaskTextField);
-                editText.setText("");
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                addButton.setVisibility(View.VISIBLE);
-                recyclerView.bringToFront();
+                hideBottom();
             }
         });
 
@@ -98,10 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 API.insertIntoTaskList(db, editText.getText().toString(), 1);
                 ArrayList<Task> list = API.getTaskFromList(db, 1);
                 TaskListLoader(list);
-                editText.setText("");
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                addButton.setVisibility(View.VISIBLE);
-                recyclerView.bringToFront();
+                hideBottom();
             }
         });
 
@@ -117,5 +129,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
     }
 
+    private void hideBottom() {
+        EditText editText = findViewById(R.id.newTaskTextField);
+        editText.setText("");
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        addButton.setVisibility(View.VISIBLE);
+        recyclerView.bringToFront();
+    }
 
+
+//    @Override
+//    protected void onDestroy() {
+//        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+//        API.saveAll(db,0,TaskListAdapter.mDataset);
+//        super.onDestroy();
+//    }
 }
