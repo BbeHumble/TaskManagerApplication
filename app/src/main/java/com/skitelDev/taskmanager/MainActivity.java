@@ -3,6 +3,7 @@ package com.skitelDev.taskmanager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -27,13 +29,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.entities.Task;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RelativeLayout bottomsheet;
     Button addButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 v.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
             }
         }
 
@@ -62,18 +63,32 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
+        recyclerView = findViewById(R.id.recycler_view);
         bottomsheet = findViewById(R.id.bottom_sheet);
         Button save = findViewById(R.id.savebutton);
         bottomsheet.clearFocus();
         addButton = findViewById(R.id.addbutton);
+        final RelativeLayout relativeLayout = findViewById(R.id.frame);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                relativeLayout.bringToFront();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 addButton.setVisibility(View.INVISIBLE);
             }
         });
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText editText = findViewById(R.id.newTaskTextField);
+                editText.setText("");
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                addButton.setVisibility(View.VISIBLE);
+                recyclerView.bringToFront();
+            }
+        });
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 API.insertIntoTaskList(db, editText.getText().toString(), 1);
                 ArrayList<Task> list = API.getTaskFromList(db, 1);
                 TaskListLoader(list);
+                editText.setText("");
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 addButton.setVisibility(View.VISIBLE);
+                recyclerView.bringToFront();
             }
         });
 

@@ -6,18 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:id="@+id/mainLayout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="547dp">
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="544dp"
+            android:background="#70969696"
+            android:clickable="true"
+            android:focusable="true">
+
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
+            android:background="#ffffff"
             android:layout_height="547dp">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/addbutton"
