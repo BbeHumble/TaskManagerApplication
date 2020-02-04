@@ -15,12 +15,15 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.entities.Task;
+import com.skitelDev.taskmanager.recycleViewHolders.SimpleItemTouchHelperCallback;
+import com.skitelDev.taskmanager.recycleViewHolders.TaskListAdapter;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Button addButton;
     BottomSheetBehavior bottomSheetBehavior;
     static SQLiteDatabase db;
+    private ItemTouchHelper mItemTouchHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             if (v instanceof EditText) {
                 v.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         }
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            hideBottom();
         }
         else {
             super.onBackPressed();
@@ -84,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
                 relativeLayout.bringToFront();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 addButton.setVisibility(View.INVISIBLE);
-
+                EditText editText = findViewById(R.id.newTaskTextField);
+                editText.requestFocus();
             }
         });
 
@@ -101,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
                 EditText editText = findViewById(R.id.newTaskTextField);
-//                API.insertIntoTaskList(db, editText.getText().toString(), 1);
                 TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db),editText.getText().toString()));
                 TaskListLoader(TaskListAdapter.mDataset);
                 hideBottom();
@@ -111,13 +116,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void TaskListLoader(ArrayList<Task> list) {
+    public void TaskListLoader(ArrayList<Task> list) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager1);
         TaskListAdapter mAdapter = new TaskListAdapter(getApplicationContext(), list);
         mAdapter.notifyDataSetChanged();
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -131,9 +139,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-        API.saveAll(db,1,TaskListAdapter.mDataset);
-        super.onDestroy();
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks = TaskListAdapter.getDataset();
+        API.saveAll(db, 1, TaskListAdapter.mDataset);
+        super.onStop();
     }
 }

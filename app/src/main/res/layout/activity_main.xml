@@ -37,7 +37,7 @@
         android:layout_height="80dp"
         android:layout_gravity="bottom|center_horizontal"
         android:background="@drawable/round_button"
-        android:text="+"
+        android:text="@string/plus"
         android:textSize="40sp" />
 
     <include layout="@layout/bottom_sheet" />

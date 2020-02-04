@@ -1,13 +1,14 @@
 package com.skitelDev.taskmanager.API;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
 
-import static android.content.Context.MODE_PRIVATE;
 
 public class API {
     public static void createDatabase(SQLiteDatabase db) {
@@ -22,7 +23,7 @@ public class API {
                 "JOIN tasklist " +
                 "ON tasklist.taskid == task.id " +
                 "WHERE tasklist.id == " + taskListId +
-                " ORDER BY id DESC", null);
+                " ORDER BY id ASC", null);
         if (query.moveToFirst()) {
             do {
                 int id = query.getInt(0);
@@ -36,7 +37,7 @@ public class API {
         return tasks;
     }
 
-    public static void insertIntoTaskList(SQLiteDatabase db, String taskText, int tasklistid) {
+    private static void insertIntoTaskList(SQLiteDatabase db, String taskText, int tasklistid) {
         db.execSQL("INSERT INTO task(text) VALUES ('" + taskText + "');");
         long index = findLastTaskID(db);
         db.execSQL("INSERT INTO tasklist(id, taskid) VALUES (" + tasklistid + "," + index + ");");
@@ -44,12 +45,17 @@ public class API {
     }
 
     public static long findLastTaskID(SQLiteDatabase db) {
-        Cursor cursor = db.rawQuery("SELECT * FROM task;", null);
-        cursor.moveToLast();
-        return cursor.getLong(0);
+        try {
+            @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM task;", null);
+            cursor.moveToLast();
+            return cursor.getLong(0);
+        }
+        catch (CursorIndexOutOfBoundsException e){
+            return 0;
+        }
     }
 
-    public static void deleteTaskById(SQLiteDatabase db, long id) {
+    private static void deleteTaskById(SQLiteDatabase db, long id) {
         db.execSQL("DELETE FROM task WHERE id =" + id + ";");
     }
 

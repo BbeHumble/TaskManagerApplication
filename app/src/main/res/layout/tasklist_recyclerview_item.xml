@@ -13,14 +13,18 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="text"
-        android:textSize="14sp" />
+        android:textSize="20sp" />
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/taskTitle"
-        android:gravity="center_vertical" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@id/taskTitle"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/taskTitle"
+        android:gravity="center_vertical"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:textSize="14sp" />
+
 </RelativeLayout>
