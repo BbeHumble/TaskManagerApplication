@@ -1,19 +1,19 @@
 package com.skitelDev.taskmanager.entities;
 
 public class Task {
-    private int id;
+    private long id;
     private String text;
 
-    public Task(int id, String text) {
+    public Task(long id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -1,36 +1,27 @@
 
 package com.skitelDev.taskmanager;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
-import android.renderscript.BaseObj;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.entities.Task;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
                 EditText editText = findViewById(R.id.newTaskTextField);
-                API.insertIntoTaskList(db, editText.getText().toString(), 1);
-                ArrayList<Task> list = API.getTaskFromList(db, 1);
-                TaskListLoader(list);
+//                API.insertIntoTaskList(db, editText.getText().toString(), 1);
+                TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db),editText.getText().toString()));
+                TaskListLoader(TaskListAdapter.mDataset);
                 hideBottom();
             }
         });
@@ -126,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager1);
         TaskListAdapter mAdapter = new TaskListAdapter(getApplicationContext(), list);
+        mAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -138,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    protected void onDestroy() {
-//        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-//        API.saveAll(db,0,TaskListAdapter.mDataset);
-//        super.onDestroy();
-//    }
+    @Override
+    protected void onDestroy() {
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        API.saveAll(db,1,TaskListAdapter.mDataset);
+        super.onDestroy();
+    }
 }

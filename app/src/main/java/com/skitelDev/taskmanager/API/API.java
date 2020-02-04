@@ -49,7 +49,7 @@ public class API {
         return cursor.getLong(0);
     }
 
-    public static void deleteTaskById(SQLiteDatabase db, int id) {
+    public static void deleteTaskById(SQLiteDatabase db, long id) {
         db.execSQL("DELETE FROM task WHERE id =" + id + ";");
     }
 
