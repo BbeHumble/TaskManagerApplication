@@ -34,17 +34,20 @@ public class MainActivity extends AppCompatActivity {
     BottomSheetBehavior bottomSheetBehavior;
     static SQLiteDatabase db;
     private ItemTouchHelper mItemTouchHelper;
+    ArrayList<Task> dataset;
+    TaskListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView = findViewById(R.id.recycler_view);
         bottomsheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
         bottomSheet();
         db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         API.createDatabase(db);
-        ArrayList<Task> list = API.getTaskFromList(db, 1);
-        TaskListLoader(list);
+        dataset = API.getTaskFromList(db, 1);
+        TaskListLoader(dataset);
     }
 
     @Override
@@ -85,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TaskListLoader(TaskListAdapter.mDataset);
                 relativeLayout.bringToFront();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 addButton.setVisibility(View.INVISIBLE);
@@ -108,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
                 EditText editText = findViewById(R.id.newTaskTextField);
                 TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db),editText.getText().toString()));
-                TaskListLoader(TaskListAdapter.mDataset);
+//                mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size());
+                        mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size()-1);
                 hideBottom();
             }
         });
@@ -118,11 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void TaskListLoader(ArrayList<Task> list) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager1);
-        TaskListAdapter mAdapter = new TaskListAdapter(getApplicationContext(), list);
-        mAdapter.notifyDataSetChanged();
+        mAdapter = new TaskListAdapter(getApplicationContext(), list);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -141,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks = TaskListAdapter.getDataset();
         API.saveAll(db, 1, TaskListAdapter.mDataset);
         super.onStop();
     }

@@ -2,6 +2,7 @@ package com.skitelDev.taskmanager.recycleViewHolders;
 
 import android.util.Log;
 
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,8 +55,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        Log.d("123","123");
-        ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
-        itemViewHolder.onItemClear();
+        if (viewHolder instanceof ItemTouchHelperViewHolder) {
+            ItemTouchHelperViewHolder itemViewHolder =
+                    (ItemTouchHelperViewHolder) viewHolder;
+            itemViewHolder.onItemClear();
+        }
+
     }
 }

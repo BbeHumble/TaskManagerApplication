@@ -28,15 +28,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         mDataset = tasks;
     }
 
-    public static ArrayList<Task> getDataset() {
-        return mDataset;
-    }
-
     @Override
     public TaskListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
         View view = mInflater.inflate(R.layout.tasklist_recyclerview_item, parent, false);
-        return new TaskListAdapter.MyViewHolder(view);
+        return new TaskListAdapter.MyViewHolder(view, new MyCustomEditTextListener());
     }
 
     @Override
@@ -46,31 +42,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        holder.myCustomEditTextListener.updatePosition(holder.getAdapterPosition());
         holder.textView.setText(mDataset.get(position).getText());
-        holder.textView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mDataset.set(position, new Task(mDataset.get(position).getId() + 1, editable.toString()));
-                notifyItemChanged(position);
-            }
-        });
-
     }
 
     @Override
     public void onItemDismiss(int position) {//удаление
-        mDataset.remove(position);
-        notifyItemRemoved(position);
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+
     }
 
     @Override
@@ -90,20 +70,22 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
         public EditText textView;
-
-        public MyViewHolder(View v) {
+        public MyCustomEditTextListener myCustomEditTextListener;
+        public MyViewHolder(View v, MyCustomEditTextListener myCustomEditTextListener) {
             super(v);
             textView = itemView.findViewById(R.id.taskTitle);
+            this.myCustomEditTextListener = myCustomEditTextListener;
+            this.textView.addTextChangedListener(myCustomEditTextListener);
+
         }
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+
         }
 
     }
@@ -112,6 +94,27 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     public int getItemCount() {
         return mDataset.size();
     }
+    private class MyCustomEditTextListener implements TextWatcher {
+        private int position;
+        public void updatePosition(int position) {
+            this.position = position;
+        }
 
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            mDataset.set(position, new Task(mDataset.get(position).getId(), editable.toString()));
+        }
+
+    }
 }
 
