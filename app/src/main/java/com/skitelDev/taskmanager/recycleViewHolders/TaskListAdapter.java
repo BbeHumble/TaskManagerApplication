@@ -36,11 +36,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     }
 
     @Override
-    public void registerAdapterDataObserver(@NonNull RecyclerView.AdapterDataObserver observer) {
-        super.registerAdapterDataObserver(observer);
-    }
-
-    @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.myCustomEditTextListener.updatePosition(holder.getAdapterPosition());
         holder.textView.setText(mDataset.get(position).getText());
@@ -52,9 +47,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             notifyItemRemoved(position);
 
     }
-
     @Override
-    public void onItemMove(int fromPosition, int toPosition) {
+    public boolean onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mDataset, i, i + 1);
@@ -65,6 +59,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+        return true;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
@@ -81,11 +76,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
         @Override
         public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
         }
 
         @Override
         public void onItemClear() {
-
+            itemView.setBackgroundColor(0);
         }
 
     }

@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ItemTouchHelper mItemTouchHelper;
     ArrayList<Task> dataset;
     TaskListAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             hideBottom();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
 
@@ -109,9 +109,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
                 EditText editText = findViewById(R.id.newTaskTextField);
-                TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db),editText.getText().toString()));
-//                mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size());
-                        mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size()-1);
+                TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), editText.getText().toString()));
+                mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
                 hideBottom();
             }
         });
@@ -131,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideBottom() {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         EditText editText = findViewById(R.id.newTaskTextField);
         editText.setText("");
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         addButton.setVisibility(View.VISIBLE);
         recyclerView.bringToFront();
     }
