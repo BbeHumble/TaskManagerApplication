@@ -81,7 +81,7 @@ public class API {
 
         return new Task(resid, restext);
     }
-    public static void updateTaskbyId(SQLiteDatabase db, int id, String text){
+    public static void updateTaskbyId(SQLiteDatabase db, long id, String text){
         db.execSQL("UPDATE task " +
                 "SET text = '"+ text +"' " +
                 "WHERE id = "+id+";");
