@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     long id;
     String taskname;
     int pos;
+    String desc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         if(getIntent().getExtras()!=null) {
             id = getIntent().getExtras().getLong("id");
             taskname = getIntent().getExtras().getString("name");
+            desc = getIntent().getExtras().getString("desc");
         }
 
         dataset = API.getTaskFromList(db, 1);
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         bundle.putLong("id", dataset.get(position).getId());
                         bundle.putString("name", dataset.get(position).getText());
                         bundle.putInt("pos", position);
+                        bundle.putString("desc", dataset.get(position).getTaskDescription());
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();
@@ -86,13 +89,9 @@ public class MainActivity extends AppCompatActivity {
             id = getIntent().getExtras().getLong("id");
             taskname = getIntent().getExtras().getString("name");
             pos = getIntent().getExtras().getInt("pos");
-//            ContentValues args = new ContentValues();
-//            args.put("id", id);
-//            args.put("text", taskname);
-//           db.update("task", args,   "id = ?", new String[]{ Long.toString(id) });
-            TaskListAdapter.mDataset.set(pos, new Task(id, taskname));
+            desc = getIntent().getExtras().getString("desc") ;
+            TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc));
             mAdapter.notifyItemChanged(pos);
-//            TaskListLoader(dataset);
         }
         super.onResume();
 
@@ -155,9 +154,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
                 EditText editText = findViewById(R.id.newTaskTextField);
-                TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), editText.getText().toString()));
-                mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
-                hideBottom();
+                EditText desc = findViewById(R.id.desc);
+                if(!editText.getText().toString().trim().equals("")) {
+                    TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), editText.getText().toString(), desc.getText().toString()));
+                    mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
+                    hideBottom();
+                    System.out.println(TaskListAdapter.mDataset.size());
+                }
+                else {
+                    hideBottom();
+                }
             }
         });
 

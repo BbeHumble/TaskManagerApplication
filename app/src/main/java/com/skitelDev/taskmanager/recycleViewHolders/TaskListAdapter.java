@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skitelDev.taskmanager.R;
 import com.skitelDev.taskmanager.entities.Task;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,7 +39,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.textView.setText(mDataset.get(position).getText());
+        holder.taskname.setText(mDataset.get(position).getText());
+        holder.taskDescription.setText(mDataset.get(position).getTaskDescription());
     }
 
     @Override
@@ -63,21 +66,24 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
-        public TextView textView;
+        public TextView taskname;
+        public TextView taskDescription;
         public MyViewHolder(View v) {
             super(v);
-            textView = itemView.findViewById(R.id.taskTitle);
-
+            taskname = itemView.findViewById(R.id.taskTitle);
+            taskDescription = itemView.findViewById(R.id.taskDescription);
         }
 
         @Override
         public void onItemSelected() {
             itemView.setBackgroundColor(Color.LTGRAY);
+            taskDescription.setBackgroundColor(Color.LTGRAY);
         }
 
         @Override
         public void onItemClear() {
             itemView.setBackgroundColor(0);
+            taskDescription.setBackgroundColor(0);
         }
 
     }

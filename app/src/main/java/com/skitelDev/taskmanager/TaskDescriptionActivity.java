@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class TaskDescriptionActivity extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     Task task;
     static TextView taskField;
     Button exitbutton;
+    EditText desc;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +26,12 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         final long id = getIntent().getExtras().getLong("id");
         final String taskname = getIntent().getExtras().getString("name");
         final int pos = getIntent().getExtras().getInt("pos");
-        task = new Task(id,taskname);
+        final String taskDescription = getIntent().getExtras().getString("desc");
+        task = new Task(id,taskname,taskDescription);
         taskField = findViewById(R.id.textView);
         taskField.setText(taskname);
+        desc = findViewById(R.id.taskDescription);
+        desc.setText(taskDescription);
         exitbutton = findViewById(R.id.exit);
         exitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +41,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
                 bundle.putLong("id", id);
                 bundle.putString("name", taskField.getText().toString());
                 bundle.putInt("pos", pos);
+                bundle.putString("desc", desc.getText().toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
