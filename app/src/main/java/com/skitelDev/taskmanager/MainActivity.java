@@ -2,10 +2,12 @@
 package com.skitelDev.taskmanager;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.CpuUsageInfo;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout bottomsheet;
     Button addButton;
     BottomSheetBehavior bottomSheetBehavior;
-    static SQLiteDatabase db;
+    SQLiteDatabase db;
     private ItemTouchHelper mItemTouchHelper;
     ArrayList<Task> dataset;
     TaskListAdapter mAdapter;
     long id;
     String taskname;
-
+    int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +59,8 @@ public class MainActivity extends AppCompatActivity {
             id = getIntent().getExtras().getLong("id");
             taskname = getIntent().getExtras().getString("name");
         }
+
         dataset = API.getTaskFromList(db, 1);
-        for (int i = 0; i < dataset.size(); i++) {
-            if(dataset.get(i).getId()==id){
-                dataset.set(i,new Task(dataset.get(i).getId(), taskname));
-            }
-        }
         TaskListLoader(dataset);
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
@@ -71,12 +69,32 @@ public class MainActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putLong("id", dataset.get(position).getId());
                         bundle.putString("name", dataset.get(position).getText());
+                        bundle.putInt("pos", position);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();
                     }
                 })
         );
+
+    }
+
+    @Override
+    protected void onResume() {
+        if (getIntent().getExtras() != null) {
+            db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+            id = getIntent().getExtras().getLong("id");
+            taskname = getIntent().getExtras().getString("name");
+            pos = getIntent().getExtras().getInt("pos");
+//            ContentValues args = new ContentValues();
+//            args.put("id", id);
+//            args.put("text", taskname);
+//           db.update("task", args,   "id = ?", new String[]{ Long.toString(id) });
+            TaskListAdapter.mDataset.set(pos, new Task(id, taskname));
+            mAdapter.notifyItemChanged(pos);
+//            TaskListLoader(dataset);
+        }
+        super.onResume();
 
     }
 

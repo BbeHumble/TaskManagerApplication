@@ -63,7 +63,7 @@ public class API {
         db.execSQL("DELETE FROM task WHERE text ='" + text + "';");
     }
 
-    public static Task findTaskById(SQLiteDatabase db, int id) {
+    public static Task findTaskById(SQLiteDatabase db, long id) {
         Cursor cursor = db.rawQuery("SELECT * FROM task " +
                 "WHERE id =" + id + ";", null);
         cursor.moveToFirst();
@@ -81,10 +81,11 @@ public class API {
 
         return new Task(resid, restext);
     }
-    public static void updateTaskbyId(SQLiteDatabase db, long id, String text){
+    public static boolean updateTaskbyId(SQLiteDatabase db, long id, String text){
         db.execSQL("UPDATE task " +
                 "SET text = '"+ text +"' " +
                 "WHERE id = "+id+";");
+        return true;
     }
     public static void updateTaskbyText(SQLiteDatabase db, String prev, String next){
         db.execSQL("UPDATE task " +

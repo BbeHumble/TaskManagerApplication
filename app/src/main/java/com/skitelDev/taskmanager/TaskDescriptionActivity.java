@@ -23,6 +23,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_description);
         final long id = getIntent().getExtras().getLong("id");
         final String taskname = getIntent().getExtras().getString("name");
+        final int pos = getIntent().getExtras().getInt("pos");
         task = new Task(id,taskname);
         taskField = findViewById(R.id.textView);
         taskField.setText(taskname);
@@ -34,6 +35,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putLong("id", id);
                 bundle.putString("name", taskField.getText().toString());
+                bundle.putInt("pos", pos);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();

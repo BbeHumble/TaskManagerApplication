@@ -23,6 +23,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         mInflater = LayoutInflater.from(context);
         mDataset = tasks;
     }
+    public static void setmDataset(ArrayList<Task> tasks){
+        mDataset = tasks;
+    }
 
     @Override
     public TaskListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
