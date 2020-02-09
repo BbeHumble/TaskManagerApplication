@@ -3,4 +3,5 @@
     <string name="plus">+</string>
     <string name="title_activity_task_description1">TaskDescriptionActivity1</string>
     <string name="exit"><![CDATA[<-]]></string>
+    <string name="tasks">Дела</string>
 </resources>

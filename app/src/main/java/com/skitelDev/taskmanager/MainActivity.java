@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         recyclerView = findViewById(R.id.recycler_view);
         bottomsheet = findViewById(R.id.bottom_sheet);
         Button save = findViewById(R.id.savebutton);
@@ -159,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
                     TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), editText.getText().toString(), desc.getText().toString()));
                     mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
                     hideBottom();
-                    System.out.println(TaskListAdapter.mDataset.size());
+                   desc.clearFocus();
+                   editText.clearFocus();
                 }
                 else {
                     hideBottom();
