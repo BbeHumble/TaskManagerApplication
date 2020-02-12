@@ -32,9 +32,8 @@ import com.skitelDev.taskmanager.recycleViewHolders.TaskListAdapter;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddPhotoBottomDialogFragment.ItemClickListener  {
     RecyclerView recyclerView;
-    RelativeLayout bottomsheet;
     Button addButton;
     BottomSheetBehavior bottomSheetBehavior;
     SQLiteDatabase db;
@@ -50,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler_view);
-        bottomsheet = findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
-        bottomSheetBehavior.setHideable(false);
         bottomSheet();
         db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         API.createDatabase(db);
@@ -114,21 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            hideBottom();
-        } else {
-            super.onBackPressed();
-        }
-
+        super.onBackPressed();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         recyclerView = findViewById(R.id.recycler_view);
-        bottomsheet = findViewById(R.id.bottom_sheet);
-        Button save = findViewById(R.id.savebutton);
-
         addButton = findViewById(R.id.addbutton);
         final RelativeLayout relativeLayout = findViewById(R.id.frame);
 
@@ -136,8 +124,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 relativeLayout.bringToFront();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                addButton.setVisibility(View.INVISIBLE);
+                AddPhotoBottomDialogFragment addPhotoBottomDialogFragment =
+                        AddPhotoBottomDialogFragment.newInstance();
+                addPhotoBottomDialogFragment.show(getSupportFragmentManager(),
+                        "add_photo_dialog_fragment");
             }
         });
 
@@ -146,26 +136,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 hideBottom();
-            }
-        });
-
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
-                EditText editText = findViewById(R.id.newTaskTextField);
-                EditText desc = findViewById(R.id.desc);
-                if(!editText.getText().toString().trim().equals("")) {
-                    TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), editText.getText().toString(), desc.getText().toString()));
-                    mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
-                    hideBottom();
-                   desc.clearFocus();
-                   editText.clearFocus();
-                }
-                else {
-                    hideBottom();
-                }
             }
         });
 
@@ -184,12 +154,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideBottom() {
-        TextView textView = findViewById(R.id.newTaskTextField);
-        textView.setText("");
         addButton.setVisibility(View.VISIBLE);
         recyclerView.bringToFront();
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
     }
 
 
@@ -199,4 +165,15 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
         API.saveAll(db, 1, TaskListAdapter.mDataset);
     }
+
+    @Override
+    public void onItemClick(String newTaskText, String desc) {
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        if(!newTaskText.trim().equals("")) {
+            TaskListAdapter.mDataset.add(new Task(API.findLastTaskID(db), newTaskText, desc));
+            mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size() - 1);
+        }
+        hideBottom();
+    }
+
 }
