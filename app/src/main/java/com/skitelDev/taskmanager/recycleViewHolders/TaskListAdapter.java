@@ -1,7 +1,7 @@
 package com.skitelDev.taskmanager.recycleViewHolders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.R;
 import com.skitelDev.taskmanager.entities.Task;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +23,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         mInflater = LayoutInflater.from(context);
         mDataset = tasks;
     }
-    public static void setmDataset(ArrayList<Task> tasks){
-        mDataset = tasks;
-    }
-
     @Override
     public TaskListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
@@ -76,14 +70,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
-            taskDescription.setBackgroundColor(Color.LTGRAY);
+            itemView.setBackgroundColor(0);
         }
 
         @Override
         public void onItemClear() {
             itemView.setBackgroundColor(0);
-            taskDescription.setBackgroundColor(0);
         }
 
     }

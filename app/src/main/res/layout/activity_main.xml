@@ -10,25 +10,25 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#8B8B8B">
+        android:background="@color/colorPrimary">
 
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:gravity="center"
-            android:text="@string/tasks"
-            android:textSize="30sp" />
 
         <RelativeLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="544dp"
-            android:background="#70969696"
+            android:background="@color/colorPrimary"
             android:clickable="true"
             android:focusable="true">
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:gravity="center"
+                android:text="@string/tasks"
+                android:textColor="@color/font"
+                android:textSize="30sp" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="547dp"
             android:layout_marginTop="50dp"
-            android:background="#AFAEAE">
+            android:background="@color/colorPrimary">
 
         </androidx.recyclerview.widget.RecyclerView>
 

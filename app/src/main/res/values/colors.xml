@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#A39797</color>
+    <color name="colorPrimary">#252424</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#AF8393</color>
+    <color name="font">#696969</color>
+    <color name="swipe">#A7A7A7</color>
 </resources>

@@ -16,7 +16,8 @@
         android:ems="10"
         android:enabled="true"
         android:gravity="center"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/font" />
 
     <EditText
         android:id="@+id/desc"
@@ -24,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/newTaskTextField"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/font" />
 
     <Button
         android:id="@+id/savebutton"

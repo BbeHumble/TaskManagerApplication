@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@drawable/border"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -12,6 +11,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
+        android:textColor="@color/font"
         android:textSize="20sp" />
 
     <TextView
@@ -19,6 +19,7 @@
         android:layout_width="299dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/taskTitle"
+        android:textColor="@color/font"
         android:textSize="18sp" />
 
 </RelativeLayout>
