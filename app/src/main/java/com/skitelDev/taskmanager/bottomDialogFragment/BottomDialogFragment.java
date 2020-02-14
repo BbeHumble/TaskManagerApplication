@@ -1,34 +1,29 @@
-package com.skitelDev.taskmanager;
+package com.skitelDev.taskmanager.bottomDialogFragment;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.skitelDev.taskmanager.R;
 
-public class AddPhotoBottomDialogFragment extends BottomSheetDialogFragment
+public class BottomDialogFragment extends BottomSheetDialogFragment
         implements View.OnClickListener {
     private ItemClickListener mListener;
     EditText newTaskText;
     EditText desc;
 
-    public static AddPhotoBottomDialogFragment newInstance() {
-        return new AddPhotoBottomDialogFragment();
+    public static BottomDialogFragment newInstance() {
+        return new BottomDialogFragment();
     }
 
     @Nullable
@@ -73,8 +68,6 @@ public class AddPhotoBottomDialogFragment extends BottomSheetDialogFragment
     }
 
 
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -85,9 +78,10 @@ public class AddPhotoBottomDialogFragment extends BottomSheetDialogFragment
 
     @Override
     public void onClick(View view) {
-        mListener.onItemClick(newTaskText.getText().toString(), desc.getText().toString() );
+        mListener.onItemClick(newTaskText.getText().toString(), desc.getText().toString());
         dismiss();
     }
+
     public interface ItemClickListener {
         void onItemClick(String newTaskText, String desc);
 

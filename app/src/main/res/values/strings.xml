@@ -4,4 +4,7 @@
     <string name="title_activity_task_description1">TaskDescriptionActivity1</string>
     <string name="exit"><![CDATA[<-]]></string>
     <string name="tasks">Дела</string>
+    <string name="save">Сохранить</string>
+    <string name="taskDescription">Описание</string>
+    <string name="newTask">Новая задача</string>
 </resources>

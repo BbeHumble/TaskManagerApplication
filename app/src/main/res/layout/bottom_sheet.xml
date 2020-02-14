@@ -12,29 +12,38 @@
         android:id="@+id/newTaskTextField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:enabled="true"
-        android:gravity="center"
+        android:hint="@string/newTask"
         android:inputType="textPersonName"
-        android:textColor="@color/font" />
+        android:textColor="@color/font"
+        android:textColorHint="@color/hint" />
 
     <EditText
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/newTaskTextField"
+        android:layout_marginLeft="20dp"
         android:ems="10"
+        android:hint="@string/taskDescription"
         android:inputType="textPersonName"
-        android:textColor="@color/font" />
+        android:textColor="@color/font"
+        android:textColorHint="@color/hint" />
 
     <Button
         android:id="@+id/savebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="false"
         android:layout_marginTop="150dp"
-        android:text="save" />
+        android:layout_marginRight="10dp"
+        android:background="#00FFFFFF"
+        android:text="@string/save"
+        android:textColor="@color/font" />
 
 </RelativeLayout>

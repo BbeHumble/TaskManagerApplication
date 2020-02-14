@@ -5,42 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".TaskDescriptionActivity">
+    tools:context=".activities.TaskDescriptionActivity">
 
     <Button
         android:id="@+id/exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:text="@string/exit"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="start"
+        android:background="@drawable/ic_back"
         android:textColor="@color/font"
         app:layout_anchorGravity="bottom|center" />
+
+    <Button
+        android:id="@+id/deleteTask"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="right"
+        android:background="@drawable/ic_delete"
+        app:layout_anchorGravity="right|top" />
 
     <EditText
         android:id="@+id/textView"
         android:layout_width="300dp"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:gravity="left"
         android:singleLine="true"
         android:textColor="@color/font" />
 
     <TextView
-        android:layout_width="335dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="300dp"
-        android:text="Описание"
-        android:textColor="@color/font" />
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="160dp"
+        android:background="@drawable/ic_description" />
 
     <EditText
         android:id="@+id/taskDescription"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="150dp"
         android:ems="10"
         android:textColor="@color/font" />
 

@@ -1,12 +1,12 @@
 package com.skitelDev.taskmanager.recycleViewHolders;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.R;
@@ -24,7 +24,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         mDataset = tasks;
     }
     @Override
-    public TaskListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+    public TaskListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
         View view = mInflater.inflate(R.layout.tasklist_recyclerview_item, parent, false);
         return new TaskListAdapter.MyViewHolder(view);
@@ -44,7 +44,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mDataset, i, i + 1);
@@ -55,14 +55,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             }
         }
         notifyItemMoved(fromPosition, toPosition);
-        return true;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
-        public TextView taskname;
-        public TextView taskDescription;
-        public MyViewHolder(View v) {
+        TextView taskname;
+        TextView taskDescription;
+        MyViewHolder(View v) {
             super(v);
             taskname = itemView.findViewById(R.id.taskTitle);
             taskDescription = itemView.findViewById(R.id.taskDescription);

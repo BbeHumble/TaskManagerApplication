@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00807979"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="544dp"
-            android:background="@color/colorPrimary"
+            android:background="#002B2B2B"
             android:clickable="true"
             android:focusable="true">
 
