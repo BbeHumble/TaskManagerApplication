@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00807979"
+    android:background="@color/colorPrimary"
     tools:context=".activities.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="547dp"
         android:background="@color/colorPrimary">
 
 
@@ -34,7 +34,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="547dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             android:background="@color/colorPrimary">
 
@@ -49,6 +49,7 @@
         android:layout_gravity="bottom|center_horizontal"
         android:background="@drawable/round_button"
         android:text="@string/plus"
+        android:textColor="@color/colorAccent"
         android:textSize="40sp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
