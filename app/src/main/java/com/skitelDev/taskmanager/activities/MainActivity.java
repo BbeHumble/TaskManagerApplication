@@ -158,8 +158,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         API.saveAll(1, TaskListAdapter.mDataset);
     }
 
