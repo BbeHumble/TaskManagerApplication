@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@color/colorPrimary"
+    android:layout_height="160dp"
+    android:background="#A3A3A3"
     android:orientation="vertical"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -18,32 +18,44 @@
         android:enabled="true"
         android:hint="@string/newTask"
         android:inputType="textPersonName"
-        android:textColor="@color/font"
-        android:textColorHint="@color/hint" />
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimaryDark" />
 
     <EditText
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/newTaskTextField"
         android:layout_marginLeft="20dp"
         android:ems="10"
         android:hint="@string/taskDescription"
         android:inputType="textPersonName"
-        android:textColor="@color/font"
-        android:textColorHint="@color/hint" />
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:visibility="gone" />
 
-    <Button
-        android:id="@+id/savebutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="false"
-        android:layout_marginTop="150dp"
-        android:layout_marginRight="10dp"
-        android:background="#00FFFFFF"
-        android:text="@string/save"
-        android:textColor="@color/font" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/addDescription"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/ic_description" />
+
+        <Button
+            android:id="@+id/savebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="5dp"
+            android:background="#00FFFFFF"
+            android:text="@string/save"
+            android:textColor="@color/colorPrimary" />
+    </RelativeLayout>
+
+</LinearLayout>

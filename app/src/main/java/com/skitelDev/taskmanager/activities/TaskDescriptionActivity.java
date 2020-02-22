@@ -29,7 +29,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         final int pos = getIntent().getExtras().getInt("pos");
         final String taskDescription = getIntent().getExtras().getString("desc");
         task = new Task(id,taskname,taskDescription);
-        taskField = findViewById(R.id.textView);
+        taskField = findViewById(R.id.taskField);
         taskField.setText(taskname);
         taskField.clearFocus();
         desc = findViewById(R.id.taskDescription);

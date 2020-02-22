@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment
     private ItemClickListener mListener;
     EditText newTaskText;
     EditText desc;
-
+    Button addDescription;
     public static BottomDialogFragment newInstance() {
         return new BottomDialogFragment();
     }
@@ -36,6 +37,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment
         view.findViewById(R.id.savebutton).setOnClickListener(this);
         newTaskText = view.findViewById(R.id.newTaskTextField);
         desc = view.findViewById(R.id.desc);
+        addDescription = view.findViewById(R.id.addDescription);
+        addDescription.setOnClickListener(view1 -> desc.setVisibility(View.VISIBLE));
         if (getDialog().getWindow() != null) {
             getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
