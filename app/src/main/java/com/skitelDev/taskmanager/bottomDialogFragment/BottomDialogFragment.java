@@ -45,7 +45,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment
                 Rect displayFrame = new Rect();
                 decorView.getWindowVisibleDisplayFrame(displayFrame);
                 int height = decorView.getContext().getResources().getDisplayMetrics().heightPixels;
-                int heightDifference = height - displayFrame.bottom;
+                int heightDifference = height - displayFrame.bottom+70;
                 if (heightDifference != 0) {
                     if (view.getPaddingBottom() != heightDifference) {
                         view.setPadding(0, 0, 0, heightDifference);

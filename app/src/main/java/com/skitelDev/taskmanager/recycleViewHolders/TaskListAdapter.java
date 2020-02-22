@@ -1,9 +1,13 @@
 package com.skitelDev.taskmanager.recycleViewHolders;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
     public static ArrayList<Task> mDataset;
@@ -35,6 +40,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.taskname.setText(mDataset.get(position).getText());
         holder.taskDescription.setText(mDataset.get(position).getTaskDescription());
+        Random rnd = new Random();
+        int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
+        shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
+
+//        holder.colorBubble.setBackgroundColor(paint);
     }
 
     @Override
@@ -61,10 +72,12 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             ItemTouchHelperViewHolder{
         TextView taskname;
         TextView taskDescription;
+        Button colorBubble;
         MyViewHolder(View v) {
             super(v);
             taskname = itemView.findViewById(R.id.taskTitle);
             taskDescription = itemView.findViewById(R.id.taskDescription);
+            colorBubble = itemView.findViewById(R.id.color);
         }
 
         @Override

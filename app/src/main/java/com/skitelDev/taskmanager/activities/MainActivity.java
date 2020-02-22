@@ -2,20 +2,15 @@
 package com.skitelDev.taskmanager.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -92,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
             }
             else {
                 pos = getIntent().getExtras().getInt("position");
-                System.out.println(pos);
                 TaskListAdapter.mDataset.remove(pos);
                 mAdapter.notifyItemRemoved(pos);
                 mAdapter.notifyItemRangeChanged(pos, TaskListAdapter.mDataset.size());
@@ -102,21 +96,6 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         }
         super.onResume();
 
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof TextView) {
-                v.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert imm != null;
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
-        }
-
-        return super.dispatchTouchEvent(event);
     }
 
     @SuppressLint("ClickableViewAccessibility")

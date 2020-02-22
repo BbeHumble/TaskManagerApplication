@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#BBBBBB"
     tools:context=".activities.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="547dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
 
         <RelativeLayout
@@ -27,16 +27,16 @@
                 android:layout_height="46dp"
                 android:gravity="center"
                 android:text="@string/tasks"
-                android:textColor="@color/font"
+                android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="483dp"
             android:layout_marginTop="60dp"
-            android:background="@color/colorPrimary">
+            android:background="@android:color/white">
 
         </androidx.recyclerview.widget.RecyclerView>
 
