@@ -21,6 +21,16 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/ic_delete" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/taskDescription"
+        android:layout_alignTop="@id/taskDescription"
+        android:layout_marginLeft="-28dp"
+        android:layout_marginTop="5dp"
+        app:srcCompat="@drawable/ic_description" />
+
     <EditText
         android:id="@+id/taskField"
         android:layout_width="300dp"
@@ -33,24 +43,47 @@
         android:textColor="@color/colorPrimary"
         android:textSize="22sp" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/taskField"
-        android:layout_marginLeft="35dp"
-        android:text="Описание" />
-
     <EditText
         android:id="@+id/taskDescription"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView3"
+        android:layout_below="@id/taskField"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
         android:ems="10"
         android:hint="Добавьте описание"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/imageView"
+        android:layout_marginTop="45dp"
+        app:srcCompat="@drawable/ic_subtask" />
+
+    <Button
+        android:id="@+id/addSubTask"
+        android:layout_width="207dp"
+        android:layout_height="32dp"
+        android:layout_alignLeft="@id/taskDescription"
+        android:layout_alignTop="@id/taskDescription"
+        android:layout_marginTop="50dp"
+        android:background="@null"
+        android:text="Добавьте подзадачу"
+        android:textSize="10sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/subTask"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/taskDescription"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     String taskname;
     int pos;
     String desc;
-
+    ArrayList<String> subTasks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +55,16 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         dataset = API.getTaskFromList(1);
         TaskListLoader(dataset);
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(MainActivity.this, TaskDescriptionActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putLong("id", dataset.get(position).getId());
-                        bundle.putString("name", dataset.get(position).getText());
-                        bundle.putInt("pos", position);
-                        bundle.putString("desc", dataset.get(position).getTaskDescription());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        finish();
-                    }
+                new RecyclerItemClickListener(getApplicationContext(), recyclerView, (view, position) -> {
+                    Intent intent = new Intent(MainActivity.this, TaskDescriptionActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("id", dataset.get(position).getId());
+                    bundle.putString("name", dataset.get(position).getText());
+                    bundle.putInt("pos", position);
+                    bundle.putString("desc", dataset.get(position).getTaskDescription());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
                 })
         );
 
@@ -82,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 taskname = getIntent().getExtras().getString("name");
                 pos = getIntent().getExtras().getInt("pos");
                 desc = getIntent().getExtras().getString("desc");
-                TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc));
+                subTasks = getIntent().getExtras().getStringArrayList("subtasks");
+                TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc, subTasks));
                 mAdapter.notifyItemChanged(pos);
             }
             else {
