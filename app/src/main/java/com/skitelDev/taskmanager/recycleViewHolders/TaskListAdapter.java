@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,8 +45,17 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
-
-//        holder.colorBubble.setBackgroundColor(paint);
+        holder.imageView.setImageResource(R.drawable.ic_has_subtask);
+        if(mDataset.get(position).getSubtasks()!=null) {
+            if (mDataset.get(position).getSubtasks().size() != 0) {
+                holder.imageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.imageView.setVisibility(View.INVISIBLE);
+            }
+        }
+        else {
+            holder.imageView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -73,11 +83,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         TextView taskname;
         TextView taskDescription;
         Button colorBubble;
+        ImageView imageView;
         MyViewHolder(View v) {
             super(v);
             taskname = itemView.findViewById(R.id.taskTitle);
             taskDescription = itemView.findViewById(R.id.taskDescription);
             colorBubble = itemView.findViewById(R.id.color);
+            imageView = itemView.findViewById(R.id.hasSubTasks);
         }
 
         @Override

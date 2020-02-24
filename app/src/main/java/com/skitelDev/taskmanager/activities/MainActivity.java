@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     int pos;
     String desc;
     ArrayList<String> subTasks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +51,13 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
             id = getIntent().getExtras().getLong("id");
             taskname = getIntent().getExtras().getString("name");
             desc = getIntent().getExtras().getString("desc");
+
         }
 
         dataset = API.getTaskFromList(1);
+        for (int i = 0; i < dataset.size(); i++) {
+            dataset.get(i).setSubtasks(API.getSubTasksByTaskId(dataset.get(i).getId()));
+        }
         TaskListLoader(dataset);
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recyclerView, (view, position) -> {
@@ -62,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     bundle.putString("name", dataset.get(position).getText());
                     bundle.putInt("pos", position);
                     bundle.putString("desc", dataset.get(position).getTaskDescription());
+                    bundle.putStringArrayList("subtasks", API.getSubTasksByTaskId(dataset.get(position).getId()));
+//                    API.saveAll(1, TaskListAdapter.mDataset);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
@@ -75,20 +82,25 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         if (getIntent().getExtras() != null) {
             db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
             id = getIntent().getExtras().getLong("id");
-            if(id!=-1) {
+            if (id != -1) {
                 taskname = getIntent().getExtras().getString("name");
                 pos = getIntent().getExtras().getInt("pos");
                 desc = getIntent().getExtras().getString("desc");
                 subTasks = getIntent().getExtras().getStringArrayList("subtasks");
-                TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc, subTasks));
+                if (TaskListAdapter.mDataset.size() != 0) {
+                    TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc));
+                } else {
+                    TaskListAdapter.mDataset.add(new Task(id, taskname, desc));
+                }
+                TaskListAdapter.mDataset.get(pos).setSubtasks(subTasks);
+                API.saveAll(1, TaskListAdapter.mDataset);
                 mAdapter.notifyItemChanged(pos);
-            }
-            else {
+            } else {
                 pos = getIntent().getExtras().getInt("position");
                 TaskListAdapter.mDataset.remove(pos);
                 mAdapter.notifyItemRemoved(pos);
                 mAdapter.notifyItemRangeChanged(pos, TaskListAdapter.mDataset.size());
-                Toast toast = Toast.makeText(getApplicationContext(),"Task deleted", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
@@ -136,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
 
     @Override
     protected void onPause() {
-        super.onPause();
         API.saveAll(1, TaskListAdapter.mDataset);
+        super.onPause();
     }
 
     @Override

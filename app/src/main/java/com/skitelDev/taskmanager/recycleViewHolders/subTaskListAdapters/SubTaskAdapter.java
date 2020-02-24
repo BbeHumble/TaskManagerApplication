@@ -36,9 +36,6 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         String s = mDataset.get(position);
         holder.sub_task_text.setText(s);
-        holder.delete_subtask.setOnClickListener(view -> {
-            removeAt(position);
-        });
         holder.sub_task_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -47,20 +44,29 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MyViewHo
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mDataset.set(holder.getAdapterPosition(),charSequence.toString());
 
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mDataset.set(position,editable.toString());
+
+
             }
         });
-
+        holder.delete_subtask.setOnClickListener(view -> {
+            removeAt(holder.getAdapterPosition());
+        });
     }
+
     private void removeAt(int position) {
         mDataset.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, mDataset.size());
+//        notifyItemRangeChanged(position, mDataset.size());
+    }
+    private void updateAt(int position, String text){
+        mDataset.set(position,text);
+        this.notifyItemChanged(position);
     }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         EditText sub_task_text;

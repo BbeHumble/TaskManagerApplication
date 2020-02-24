@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.R;
 import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
@@ -41,7 +40,8 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         final String taskname = getIntent().getExtras().getString("name");
         final int pos = getIntent().getExtras().getInt("pos");
         final String taskDescription = getIntent().getExtras().getString("desc");
-        dataset = API.getSubTasksByTaskId(id);
+//        dataset = API.getSubTasksByTaskId(id);
+        dataset = getIntent().getExtras().getStringArrayList("subtasks");
         subtasks = findViewById(R.id.subTask);
         TaskListLoader(dataset);
         addSubTask = findViewById(R.id.addSubTask);
@@ -52,7 +52,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         desc = findViewById(R.id.taskDescription);
         desc.setText(taskDescription);
         exitbutton = findViewById(R.id.exit);
-        if (dataset.size()>0) {
+        if (SubTaskAdapter.mDataset.size()>0) {
             subtasks.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW, R.id.subTask);
@@ -66,7 +66,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
             bundle.putString("name", taskField.getText().toString());
             bundle.putInt("pos", pos);
             bundle.putString("desc", desc.getText().toString());
-            bundle.putStringArrayList("subtasks", dataset);
+            bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
