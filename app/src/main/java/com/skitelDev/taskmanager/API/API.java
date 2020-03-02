@@ -35,10 +35,8 @@ public class API {
     public static ArrayList<String> getSubTasksByTaskId(long taskId) {
         ArrayList<String> subTasks = new ArrayList<>();
         Cursor query = db.rawQuery("SELECT subtasks.sub_task_text" +
-                        " FROM subtasks" +
-                        " JOIN task " +
-                        "ON subtasks.taskId = task.id " +
-                        "WHERE task.id =" + taskId
+                        " FROM subtasks " +
+                        "WHERE subtasks.taskid =" + taskId+";"
                 , null);
         if (query.moveToFirst()) {
             do {
@@ -73,7 +71,7 @@ public class API {
                 int id = query.getInt(0);
                 String text = query.getString(1);
                 String desc = query.getString(2);
-                tasks.add(new Task(id, text, desc));
+                tasks.add(new Task(id, text, desc,new ArrayList<>()));
             }
             while (query.moveToNext());
         }

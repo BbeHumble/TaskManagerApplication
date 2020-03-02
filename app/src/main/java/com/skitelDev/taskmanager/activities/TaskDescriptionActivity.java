@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.R;
 import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
@@ -32,27 +33,30 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     SubTaskAdapter subTaskAdapter;
     ArrayList<String> dataset;
     Button addSubTask;
+    long id;
+    int pos;
+    String taskname;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_description);
-        final long id = getIntent().getExtras().getLong("id");
-        final String taskname = getIntent().getExtras().getString("name");
-        final int pos = getIntent().getExtras().getInt("pos");
+        id = getIntent().getExtras().getLong("id");
+        taskname = getIntent().getExtras().getString("name");
+        pos = getIntent().getExtras().getInt("pos");
         final String taskDescription = getIntent().getExtras().getString("desc");
-//        dataset = API.getSubTasksByTaskId(id);
+        dataset = API.getSubTasksByTaskId(id);
         dataset = getIntent().getExtras().getStringArrayList("subtasks");
         subtasks = findViewById(R.id.subTask);
         TaskListLoader(dataset);
         addSubTask = findViewById(R.id.addSubTask);
-        task = new Task(id,taskname,taskDescription);
+        task = new Task(id, taskname, taskDescription);
         taskField = findViewById(R.id.taskField);
         taskField.setText(taskname);
         taskField.clearFocus();
         desc = findViewById(R.id.taskDescription);
         desc.setText(taskDescription);
         exitbutton = findViewById(R.id.exit);
-        if (SubTaskAdapter.mDataset.size()>0) {
+        if (SubTaskAdapter.mDataset != null) {
             subtasks.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW, R.id.subTask);
@@ -60,48 +64,83 @@ public class TaskDescriptionActivity extends AppCompatActivity {
             addSubTask.setLayoutParams(params);
         }
         exitbutton.setOnClickListener(view -> {
-            Intent intent = new Intent(TaskDescriptionActivity.this, MainActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong("id", id);
-            bundle.putString("name", taskField.getText().toString());
-            bundle.putInt("pos", pos);
-            bundle.putString("desc", desc.getText().toString());
-            bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            finish();
+            if (!taskField.getText().toString().equals("")) {
+                saveAndExit(id, pos);
+            } else {
+                deleteAndExit(pos);
+            }
         });
         deleteTask = findViewById(R.id.deleteTask);
         deleteTask.setOnClickListener(view -> {
-            Intent intent = new Intent(TaskDescriptionActivity.this, MainActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong("id", -1);
-            bundle.putInt("position",pos);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            finish();
+            deleteAndExit(pos);
         });
         addSubTask.setOnClickListener(view -> {
-            if (subtasks.getVisibility()== View.GONE){
+            if (subtasks.getVisibility() == View.GONE) {
                 subtasks.setVisibility(View.VISIBLE);
-                RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.addRule(RelativeLayout.BELOW, R.id.subTask);
-                params.setMargins(70,0,0,0);
+                params.setMargins(70, 0, 0, 0);
                 addSubTask.setLayoutParams(params);
-                SubTaskAdapter.mDataset.add("");
-            }
-            else{
-                SubTaskAdapter.mDataset.add("");
+                if (SubTaskAdapter.mDataset == null) {
+                    SubTaskAdapter.mDataset = new ArrayList<>();
+                    SubTaskAdapter.mDataset.add("");
+                } else {
+                    SubTaskAdapter.mDataset.add("");
+                }
+                subTaskAdapter.notifyItemInserted(SubTaskAdapter.mDataset.size());
+            } else {
+                if (SubTaskAdapter.mDataset == null) {
+                    SubTaskAdapter.mDataset = new ArrayList<>();
+                    SubTaskAdapter.mDataset.add("");
+                } else {
+                    SubTaskAdapter.mDataset.add("");
+                }
                 subTaskAdapter.notifyItemInserted(SubTaskAdapter.mDataset.size());
             }
         });
+
     }
+
+    private void deleteAndExit(int pos) {
+        Intent intent = new Intent(TaskDescriptionActivity.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", -1);
+        bundle.putInt("position", pos);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
+    }
+
+    private void saveAndExit(long id, int pos) {
+        Intent intent = new Intent(TaskDescriptionActivity.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", id);
+        bundle.putString("name", taskField.getText().toString());
+        bundle.putInt("pos", pos);
+        bundle.putString("desc", desc.getText().toString());
+        SubTaskAdapter.mDataset.remove("");
+
+        bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
+    }
+
     public void TaskListLoader(ArrayList<String> list) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         subtasks.setLayoutManager(layoutManager1);
         subTaskAdapter = new SubTaskAdapter(getApplicationContext(), list);
         subtasks.setAdapter(subTaskAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(taskField.getText().toString().trim().equals("")){
+            deleteAndExit(pos);
+        }else {
+            saveAndExit(id,pos);
+        }
     }
 
 }

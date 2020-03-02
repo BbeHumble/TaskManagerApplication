@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="8dp"
     android:background="#FFFFFF"
     tools:context=".activities.TaskDescriptionActivity">
 
@@ -19,7 +20,8 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentRight="true"
-        android:background="@drawable/ic_delete" />
+        android:background="@drawable/ic_delete"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -29,7 +31,9 @@
         android:layout_alignTop="@id/taskDescription"
         android:layout_marginLeft="-28dp"
         android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/ic_description" />
+        app:srcCompat="@drawable/ic_description"
+        android:layout_alignStart="@id/taskDescription"
+        android:layout_marginStart="-28dp" />
 
     <EditText
         android:id="@+id/taskField"
@@ -41,7 +45,8 @@
         android:gravity="left"
         android:singleLine="true"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:layout_marginStart="30dp" />
 
     <EditText
         android:id="@+id/taskDescription"
@@ -52,9 +57,10 @@
         android:layout_marginTop="20dp"
         android:background="@null"
         android:ems="10"
-        android:hint="Добавьте описание"
+        android:hint="@string/addDescription"
         android:textColor="@color/colorPrimary"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_marginStart="30dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -62,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/imageView"
         android:layout_marginTop="45dp"
+        android:contentDescription="@string/addSubTasks"
         app:srcCompat="@drawable/ic_subtask" />
 
     <Button
@@ -72,8 +79,9 @@
         android:layout_alignTop="@id/taskDescription"
         android:layout_marginTop="50dp"
         android:background="@null"
-        android:text="Добавьте подзадачу"
-        android:textSize="10sp" />
+        android:text="@string/addSubTasks"
+        android:textSize="12sp"
+        android:layout_alignStart="@id/taskDescription" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/subTask"
@@ -82,7 +90,8 @@
         android:layout_below="@id/taskDescription"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:layout_marginStart="30dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

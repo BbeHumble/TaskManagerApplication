@@ -60,8 +60,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
 
     @Override
     public void onItemDismiss(int position) {//удаление
-            mDataset.remove(position);
-            notifyItemRemoved(position);
+        mDataset.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override

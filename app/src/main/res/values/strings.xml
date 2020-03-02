@@ -7,4 +7,6 @@
     <string name="save">Сохранить</string>
     <string name="taskDescription">Описание</string>
     <string name="newTask">Новая задача</string>
+    <string name="addSubTasks">Добавьте подзадачу</string>
+    <string name="addDescription">Добавьте описание</string>
 </resources>
