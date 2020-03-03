@@ -46,16 +46,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
-//        if(mDataset.get(position).getSubtasks()!=null) {
-//            if (mDataset.get(position).getSubtasks().size() != 0) {
-//                holder.imageView.setVisibility(View.VISIBLE);
-//            } else {
-//                holder.imageView.setVisibility(View.INVISIBLE);
-//            }
-//        }
-//        else {
-//            holder.imageView.setVisibility(View.INVISIBLE);
-//        }
     }
 
     @Override

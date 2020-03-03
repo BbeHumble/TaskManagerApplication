@@ -15,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.R;
-import com.skitelDev.taskmanager.entities.SubTask;
 import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
 
