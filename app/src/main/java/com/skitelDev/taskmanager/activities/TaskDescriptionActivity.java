@@ -120,7 +120,9 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         bundle.putString("name", taskField.getText().toString());
         bundle.putInt("pos", pos);
         bundle.putString("desc", desc.getText().toString());
-        SubTaskAdapter.mDataset.remove("");
+        if(SubTaskAdapter.mDataset!=null) {
+            SubTaskAdapter.mDataset.remove("");
+        }
         bundle.putLongArray("prev_subtaks_ids", subtasksIds);
         bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
         intent.putExtras(bundle);
