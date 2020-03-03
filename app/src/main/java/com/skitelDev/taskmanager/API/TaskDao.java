@@ -26,4 +26,6 @@ public interface TaskDao {
 
     @Query("select * from tasks where task_id ==:id")
     Task getTask(long id);
+    @Query("delete from tasks")
+    void deleteAllTasks();
 }

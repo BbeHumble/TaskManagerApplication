@@ -23,17 +23,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/hasSubTasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@id/taskTitle"
-        android:background="@drawable/ic_has_subtask"
-        android:clickable="false"
-        android:visibility="visible" />
-
     <TextView
         android:id="@+id/taskDescription"
         android:layout_width="299dp"

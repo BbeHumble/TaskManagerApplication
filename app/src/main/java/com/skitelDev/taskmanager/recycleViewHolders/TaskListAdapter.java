@@ -79,7 +79,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             taskname = itemView.findViewById(R.id.taskTitle);
             taskDescription = itemView.findViewById(R.id.taskDescription);
             colorBubble = itemView.findViewById(R.id.color);
-            imageView = itemView.findViewById(R.id.hasSubTasks);
+//            imageView = itemView.findViewById(R.id.hasSubTasks);
         }
 
         @Override

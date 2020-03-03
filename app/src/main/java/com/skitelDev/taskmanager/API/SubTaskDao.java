@@ -26,4 +26,6 @@ public interface SubTaskDao {
     @Query("select * from subtasks where taskid ==:id")
     List<SubTask> getAllSubTasks(long id);
 
+    @Query("delete from subtasks")
+    void deleleAllSubtasks();
 }
