@@ -19,13 +19,14 @@ import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
-    public static ArrayList<Task> mDataset;
+    public static List<Task> mDataset;
     private LayoutInflater mInflater;
 
-    public TaskListAdapter(Context context, ArrayList<Task> tasks) {
+    public TaskListAdapter(Context context, List<Task> tasks) {
         mInflater = LayoutInflater.from(context);
         mDataset = tasks;
     }
@@ -45,17 +46,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
-        holder.imageView.setImageResource(R.drawable.ic_has_subtask);
-        if(mDataset.get(position).getSubtasks()!=null) {
-            if (mDataset.get(position).getSubtasks().size() != 0) {
-                holder.imageView.setVisibility(View.VISIBLE);
-            } else {
-                holder.imageView.setVisibility(View.INVISIBLE);
-            }
-        }
-        else {
-            holder.imageView.setVisibility(View.INVISIBLE);
-        }
+//        if(mDataset.get(position).getSubtasks()!=null) {
+//            if (mDataset.get(position).getSubtasks().size() != 0) {
+//                holder.imageView.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.imageView.setVisibility(View.INVISIBLE);
+//            }
+//        }
+//        else {
+//            holder.imageView.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
@@ -83,7 +83,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         TextView taskname;
         TextView taskDescription;
         Button colorBubble;
-        ImageView imageView;
+        Button imageView;
         MyViewHolder(View v) {
             super(v);
             taskname = itemView.findViewById(R.id.taskTitle);

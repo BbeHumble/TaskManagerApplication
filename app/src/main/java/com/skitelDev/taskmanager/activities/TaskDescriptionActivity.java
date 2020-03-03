@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.API.API;
 import com.skitelDev.taskmanager.R;
+import com.skitelDev.taskmanager.entities.SubTask;
 import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
 
@@ -36,6 +37,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     long id;
     int pos;
     String taskname;
+    long[] subtasksIds;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +46,8 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         taskname = getIntent().getExtras().getString("name");
         pos = getIntent().getExtras().getInt("pos");
         final String taskDescription = getIntent().getExtras().getString("desc");
-        dataset = API.getSubTasksByTaskId(id);
         dataset = getIntent().getExtras().getStringArrayList("subtasks");
+        subtasksIds = getIntent().getExtras().getLongArray("subtasks_ids");
         subtasks = findViewById(R.id.subTask);
         TaskListLoader(dataset);
         addSubTask = findViewById(R.id.addSubTask);
@@ -119,7 +121,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         bundle.putInt("pos", pos);
         bundle.putString("desc", desc.getText().toString());
         SubTaskAdapter.mDataset.remove("");
-
+        bundle.putLongArray("prev_subtaks_ids", subtasksIds);
         bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
         intent.putExtras(bundle);
         startActivity(intent);
