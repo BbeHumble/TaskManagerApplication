@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 desc = getIntent().getExtras().getString("desc");
                 ArrayList<String> subtasks = getIntent().getExtras().getStringArrayList("subtasks");
                 long[] prev_subtasksIDs = getIntent().getExtras().getLongArray("prev_subtaks_ids");
-//                dataset.set(pos, new Task(id, taskname, desc));
+                dataset.set(pos, new Task(id, taskname, desc));
                 taskDao.updateTask(new Task(id, taskname, desc));
                 if (prev_subtasksIDs.length == subtasks.size()) {
                     for (int i = 0; i < subtasks.size(); i++) {
