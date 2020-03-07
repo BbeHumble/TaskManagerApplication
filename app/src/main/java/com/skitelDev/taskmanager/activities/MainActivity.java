@@ -180,29 +180,29 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         recyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        taskDao.deleteAllTasks();
-        for (int i = 0; i < TaskListAdapter.mDataset.size() ; i++) {
-            taskDao.addTask(TaskListAdapter.mDataset.get(i));
-        }
-        ArrayList<String[]> taskswithSubtasks = new ArrayList<>();
-        for (int i = 0; i < TaskListAdapter.mDataset.size(); i++) {
-            List<SubTask> subTasks = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId());
-            String [] subtasksString = new String[subTasks.size()];
-            for (int j = 0; j < subTasks.size(); j++) {
-                subtasksString[j] = subTasks.get(j).subTaskText;
-            }
-            taskswithSubtasks.add(subtasksString);
-        }
-        subTaskDao.deleleAllSubtasks();
-        for (int i = 0; i < taskswithSubtasks.size() ; i++) {
-            for (int j = 0; j <taskswithSubtasks.get(i).length ; j++) {
-                subTaskDao.addSubTask(new SubTask(TaskListAdapter.mDataset.get(i).getId(),taskswithSubtasks.get(i)[j]));
-            }
-        }
-
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        taskDao.deleteAllTasks();
+//        for (int i = 0; i < TaskListAdapter.mDataset.size() ; i++) {
+//            taskDao.addTask(TaskListAdapter.mDataset.get(i));
+//        }
+//        ArrayList<String[]> taskswithSubtasks = new ArrayList<>();
+//        for (int i = 0; i < TaskListAdapter.mDataset.size(); i++) {
+//            List<SubTask> subTasks = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId());
+//            String [] subtasksString = new String[subTasks.size()];
+//            for (int j = 0; j < subTasks.size(); j++) {
+//                subtasksString[j] = subTasks.get(j).subTaskText;
+//            }
+//            taskswithSubtasks.add(subtasksString);
+//        }
+//        subTaskDao.deleleAllSubtasks();
+//        for (int i = 0; i < taskswithSubtasks.size() ; i++) {
+//            for (int j = 0; j <taskswithSubtasks.get(i).length ; j++) {
+//                subTaskDao.addSubTask(new SubTask(TaskListAdapter.mDataset.get(i).getId(),taskswithSubtasks.get(i)[j]));
+//            }
+//        }
+//
+//    }
 
 }
