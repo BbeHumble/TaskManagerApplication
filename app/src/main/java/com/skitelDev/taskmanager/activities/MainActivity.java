@@ -30,8 +30,8 @@ import com.skitelDev.taskmanager.recycleViewHolders.RecyclerItemClickListener;
 import com.skitelDev.taskmanager.recycleViewHolders.SimpleItemTouchHelperCallback;
 import com.skitelDev.taskmanager.recycleViewHolders.TaskListAdapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BottomDialogFragment.ItemClickListener {
@@ -39,13 +39,14 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     RecyclerView recyclerView;
     Button addButton;
     List<Task> dataset;
-    TaskListAdapter mAdapter;
+    static TaskListAdapter mAdapter;
     long id;
     String taskname;
     int pos;
     String desc;
-    TaskDao taskDao;
-    SubTaskDao subTaskDao;
+    static TaskDao taskDao;
+    static SubTaskDao subTaskDao;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 ArrayList<String> subtasks = getIntent().getExtras().getStringArrayList("subtasks");
                 long[] prev_subtasksIDs = getIntent().getExtras().getLongArray("prev_subtaks_ids");
                 dataset.set(pos, new Task(id, taskname, desc));
-                taskDao.updateTask(new Task(id, taskname, desc));
+//                taskDao.updateTask(new Task(id, taskname, desc));
                 if (prev_subtasksIDs.length == subtasks.size()) {
                     for (int i = 0; i < subtasks.size(); i++) {
                         subTaskDao.updateSubTask(new SubTask(prev_subtasksIDs[i], id, subtasks.get(i)));
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     finish();
                 })
         );
+
     }
 
     @Override
@@ -144,6 +146,22 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+    public static void deleteItem(int position) {
+        taskDao.deleteTask(new Task(TaskListAdapter.mDataset.get(position).getId(),TaskListAdapter.mDataset.get(position).getText(),TaskListAdapter.mDataset.get(position).getTaskDescription()));
+        subTaskDao.deleteSubTasksById(TaskListAdapter.mDataset.get(position).getId());
+        TaskListAdapter.mDataset.remove(position);
+        mAdapter.notifyItemRemoved(position);
+
+    }
+//    public static void moveItem(int fromPosition, int toPosition){
+//        long firstId = TaskListAdapter.mDataset.get(fromPosition).getId();
+//        String firstText = TaskListAdapter.mDataset.get(toPosition).getText();
+//        String firstDescription = TaskListAdapter.mDataset.get(toPosition).getTaskDescription();
+//        taskDao.updateTask(new Task(TaskListAdapter.mDataset.get(toPosition).getId(),
+//                TaskListAdapter.mDataset.get(fromPosition).getText(),TaskListAdapter.mDataset.get(fromPosition).getTaskDescription()));
+//        taskDao.updateTask(new Task(firstId,firstText,firstDescription));
+//    }
 
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
@@ -180,29 +198,24 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         recyclerView.setAdapter(mAdapter);
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        taskDao.deleteAllTasks();
-//        for (int i = 0; i < TaskListAdapter.mDataset.size() ; i++) {
-//            taskDao.addTask(TaskListAdapter.mDataset.get(i));
-//        }
-//        ArrayList<String[]> taskswithSubtasks = new ArrayList<>();
-//        for (int i = 0; i < TaskListAdapter.mDataset.size(); i++) {
-//            List<SubTask> subTasks = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId());
-//            String [] subtasksString = new String[subTasks.size()];
-//            for (int j = 0; j < subTasks.size(); j++) {
-//                subtasksString[j] = subTasks.get(j).subTaskText;
-//            }
-//            taskswithSubtasks.add(subtasksString);
-//        }
-//        subTaskDao.deleleAllSubtasks();
-//        for (int i = 0; i < taskswithSubtasks.size() ; i++) {
-//            for (int j = 0; j <taskswithSubtasks.get(i).length ; j++) {
-//                subTaskDao.addSubTask(new SubTask(TaskListAdapter.mDataset.get(i).getId(),taskswithSubtasks.get(i)[j]));
-//            }
-//        }
-//
-//    }
+    @Override
+    protected void onStop() {
+        ArrayList<Task> tasks = (ArrayList<Task>) TaskListAdapter.mDataset;
+        ArrayList<ArrayList<SubTask>> subTasks = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            subTasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(tasks.get(i).getId()));
+        }
+        taskDao.deleteAllTasks();
+        subTaskDao.deleleAllSubtasks();
+        for (int i = 0; i <subTasks.size() ; i++) {
+            taskDao.addTask(tasks.get(i));
+            for (int j = 0; j < subTasks.get(i).size(); j++) {
+                subTaskDao.addSubTask(subTasks.get(i).get(j));
+            }
+        }
+
+        super.onStop();
+    }
 
 }
+

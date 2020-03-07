@@ -22,10 +22,10 @@ public interface SubTaskDao {
 
     @Query("delete from subtasks where subtask_id==:id")
     void deleteSubTask(long id);
-
+    @Query("delete from subtasks where taskid==:id")
+    void deleteSubTasksById(long id);
     @Query("select * from subtasks where taskid ==:id")
     List<SubTask> getAllSubTasks(long id);
-
     @Query("delete from subtasks")
     void deleleAllSubtasks();
 }

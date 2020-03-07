@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.R;
+import com.skitelDev.taskmanager.activities.MainActivity;
 import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.ArrayList;
@@ -46,13 +47,23 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
+//        if(mDataset.get(position).getSubtasks()!=null) {
+//            if (mDataset.get(position).getSubtasks().size() != 0) {
+//                holder.imageView.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.imageView.setVisibility(View.INVISIBLE);
+//            }
+//        }
+//        else {
+//            holder.imageView.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
     public void onItemDismiss(int position) {//удаление
-        mDataset.remove(position);
-        notifyItemRemoved(position);
+        MainActivity.deleteItem(position);
     }
+
 
 //    @Override
 //    public void onItemMove(int fromPosition, int toPosition) {
