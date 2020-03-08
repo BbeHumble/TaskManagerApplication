@@ -99,9 +99,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
             } else {
                 TaskListLoader(dataset);
                 pos = getIntent().getExtras().getInt("position");
-                dataset.remove(pos);
-                mAdapter.notifyItemRemoved(pos);
-                taskDao.deleteTask(dataset.get(pos));
+                deleteItem(pos);
                 Toast toast = Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT);
                 toast.show();
             }
