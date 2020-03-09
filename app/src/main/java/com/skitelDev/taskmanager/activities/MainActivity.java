@@ -30,9 +30,15 @@ import com.skitelDev.taskmanager.recycleViewHolders.RecyclerItemClickListener;
 import com.skitelDev.taskmanager.recycleViewHolders.SimpleItemTouchHelperCallback;
 import com.skitelDev.taskmanager.recycleViewHolders.TaskListAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.internal.observers.SubscriberCompletableObserver;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements BottomDialogFragment.ItemClickListener {
     public TaskManagerDatabase taskManagerDatabase;
@@ -146,20 +152,13 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     }
 
     public static void deleteItem(int position) {
-        taskDao.deleteTask(new Task(TaskListAdapter.mDataset.get(position).getId(),TaskListAdapter.mDataset.get(position).getText(),TaskListAdapter.mDataset.get(position).getTaskDescription()));
+        taskDao.deleteTask(new Task(TaskListAdapter.mDataset.get(position).getId(), TaskListAdapter.mDataset.get(position).getText(), TaskListAdapter.mDataset.get(position).getTaskDescription()));
         subTaskDao.deleteSubTasksById(TaskListAdapter.mDataset.get(position).getId());
         TaskListAdapter.mDataset.remove(position);
         mAdapter.notifyItemRemoved(position);
 
     }
-//    public static void moveItem(int fromPosition, int toPosition){
-//        long firstId = TaskListAdapter.mDataset.get(fromPosition).getId();
-//        String firstText = TaskListAdapter.mDataset.get(toPosition).getText();
-//        String firstDescription = TaskListAdapter.mDataset.get(toPosition).getTaskDescription();
-//        taskDao.updateTask(new Task(TaskListAdapter.mDataset.get(toPosition).getId(),
-//                TaskListAdapter.mDataset.get(fromPosition).getText(),TaskListAdapter.mDataset.get(fromPosition).getTaskDescription()));
-//        taskDao.updateTask(new Task(firstId,firstText,firstDescription));
-//    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private void bottomSheet() {
@@ -197,23 +196,65 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     }
 
     @Override
-    protected void onStop() {
-        ArrayList<Task> tasks = (ArrayList<Task>) TaskListAdapter.mDataset;
-        ArrayList<ArrayList<SubTask>> subTasks = new ArrayList<>();
+    protected void onDestroy() {
+        ArrayList<ArrayList<SubTask>> subtasks = new ArrayList<>();
+        List<Task> tasks = TaskListAdapter.mDataset;
         for (int i = 0; i < tasks.size(); i++) {
-            subTasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(tasks.get(i).getId()));
+            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
         }
-        taskDao.deleteAllTasks();
-        subTaskDao.deleleAllSubtasks();
-        for (int i = 0; i <subTasks.size() ; i++) {
-            taskDao.addTask(tasks.get(i));
-            for (int j = 0; j < subTasks.get(i).size(); j++) {
-                subTaskDao.addSubTask(subTasks.get(i).get(j));
-            }
-        }
+        Callable<Void> clb = () -> {
+            taskDao.deleteAllTasks();
+            return null;
+        };
 
-        super.onStop();
+        Completable.fromCallable(clb).subscribe(
+                new DisposableCompletableObserver() {
+
+                    @Override
+                    public void onComplete() {
+                        List<Task> tasks = TaskListAdapter.mDataset;
+                        int k = 0;
+                        for (int i = 0; i < tasks.size(); i++) {
+                            taskDao.addTask(new Task(i + 1, tasks.get(i).getText(), tasks.get(i).getTaskDescription()));
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                }
+        );
+        Callable<Void> clb1 = () -> {
+            subTaskDao.deleleAllSubtasks();
+            return null;
+        };
+        Completable.fromCallable(clb1).subscribe(
+                new DisposableCompletableObserver() {
+
+                    @Override
+                    public void onComplete() {
+                        List<Task> tasks = TaskListAdapter.mDataset;
+                        int k = 0;
+                        for (int i = 0; i < tasks.size(); i++) {
+                            for (int j = 0; j < subtasks.get(i).size(); j++) {
+                                subTaskDao.addSubTask(new SubTask(k, i + 1, subtasks.get(i).get(j).subTaskText));
+                                k++;
+                            }
+                        }
+                        for (int i = 0; i < tasks.size(); i++) {
+                            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
+                        }
+                        System.out.println(subtasks);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                }
+        );
+        super.onDestroy();
     }
-
 }
 

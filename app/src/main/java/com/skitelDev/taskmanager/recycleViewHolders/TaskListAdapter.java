@@ -65,19 +65,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     }
 
 
-//    @Override
-//    public void onItemMove(int fromPosition, int toPosition) {
-//        if (fromPosition < toPosition) {
-//            for (int i = fromPosition; i < toPosition; i++) {
-//                Collections.swap(mDataset, i, i + 1);
-//            }
-//        } else {
-//            for (int i = fromPosition; i > toPosition; i--) {
-//                Collections.swap(mDataset, i, i - 1);
-//            }
-//        }
-//        notifyItemMoved(fromPosition, toPosition);
-//    }
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mDataset, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mDataset, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{

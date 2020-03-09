@@ -10,9 +10,11 @@ import com.skitelDev.taskmanager.entities.Task;
 
 import java.util.List;
 
+import static androidx.room.OnConflictStrategy.REPLACE;
+
 @Dao
 public interface TaskDao {
-    @Insert
+    @Insert(onConflict = REPLACE)
     long addTask(Task task);
 
     @Update

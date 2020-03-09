@@ -15,6 +15,7 @@ public class Task {
     private String text;
     @ColumnInfo(name = "task_description")
     private String taskDescription;
+
     public Task(long id, String text, String taskDescription) {
         this.id = id;
         this.text = text;
