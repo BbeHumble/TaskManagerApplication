@@ -74,33 +74,9 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 taskname = getIntent().getExtras().getString("name");
                 pos = getIntent().getExtras().getInt("pos");
                 desc = getIntent().getExtras().getString("desc");
-                ArrayList<String> subtasks = getIntent().getExtras().getStringArrayList("subtasks");
-                long[] prev_subtasksIDs = getIntent().getExtras().getLongArray("prev_subtaks_ids");
                 dataset.set(pos, new Task(id, taskname, desc));
-//                taskDao.updateTask(new Task(id, taskname, desc));
-                if (prev_subtasksIDs.length == subtasks.size()) {
-                    for (int i = 0; i < subtasks.size(); i++) {
-                        subTaskDao.updateSubTask(new SubTask(prev_subtasksIDs[i], id, subtasks.get(i)));
-                    }
-                }
-                if (prev_subtasksIDs.length < subtasks.size()) {
-                    for (int i = 0; i < prev_subtasksIDs.length; i++) {
-                        subTaskDao.updateSubTask(new SubTask(prev_subtasksIDs[i], id, subtasks.get(i)));
-                    }
-                    for (int i = prev_subtasksIDs.length; i < subtasks.size(); i++) {
-                        subTaskDao.addSubTask(new SubTask(id, subtasks.get(i)));
-                    }
-                }
-                if (prev_subtasksIDs.length > subtasks.size()) {
-                    for (int i = 0; i < subtasks.size(); i++) {
-                        subTaskDao.updateSubTask(new SubTask(prev_subtasksIDs[i], id, subtasks.get(i)));
-                    }
-                    for (int i = subtasks.size(); i < prev_subtasksIDs.length; i++) {
-                        subTaskDao.deleteSubTask(prev_subtasksIDs[i]);
-                    }
-                }
-                taskDao.updateTask(dataset.get(pos));
-                TaskListLoader(dataset);
+                taskDao.updateTask(TaskListAdapter.mDataset.get(pos));
+                TaskListLoader(TaskListAdapter.mDataset);
                 mAdapter.notifyItemChanged(pos);
             } else {
                 TaskListLoader(dataset);
@@ -114,12 +90,12 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 new RecyclerItemClickListener(getApplicationContext(), recyclerView, (view, position) -> {
                     Intent intent = new Intent(MainActivity.this, TaskDescriptionActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putLong("id", dataset.get(position).getId());
-                    bundle.putString("name", dataset.get(position).getText());
+                    bundle.putLong("id", TaskListAdapter.mDataset.get(position).getId());
+                    bundle.putString("name", TaskListAdapter.mDataset.get(position).getText());
                     bundle.putInt("pos", position);
-                    bundle.putString("desc", dataset.get(position).getTaskDescription());
+                    bundle.putString("desc", TaskListAdapter.mDataset.get(position).getTaskDescription());
                     ArrayList<String> subtasksStrings = new ArrayList<>();
-                    ArrayList<SubTask> subTasks = (ArrayList<SubTask>) subTaskDao.getAllSubTasks(dataset.get(position).getId());
+                    ArrayList<SubTask> subTasks = (ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(position).getId());
                     long[] subtasksIds = new long[subTasks.size()];
                     for (int i = 0; i < subTasks.size(); i++) {
                         subtasksStrings.add(subTasks.get(i).getSubTaskText());
@@ -138,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     @Override
     public void onItemClick(String newTaskText, String desc) {
         if (!newTaskText.trim().equals("")) {
-            Task task = new Task(taskDao.getAllTasks().size() + 1, newTaskText, desc);
+            int index = taskDao.getAllTasks().size() + 1;
+            Task task = new Task(index, newTaskText, desc);
             TaskListAdapter.mDataset.add(task);
             mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size());
             taskDao.addTask(task);
@@ -196,14 +173,16 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     }
 
     @Override
-    protected void onDestroy() {
-        ArrayList<ArrayList<SubTask>> subtasks = new ArrayList<>();
-        List<Task> tasks = TaskListAdapter.mDataset;
-        for (int i = 0; i < tasks.size(); i++) {
-            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
-        }
+    protected void onPause() {
+//        ArrayList<ArrayList<SubTask>> subtasks = new ArrayList<>();
+//        List<Task> tasks = TaskListAdapter.mDataset;
+//        for (int i = 0; i < tasks.size(); i++) {
+//            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
+//        }
+        ArrayList<SubTask> subTasks = new ArrayList<>();
         Callable<Void> clb = () -> {
             taskDao.deleteAllTasks();
+//            subTaskDao.deleleAllSubtasks();
             return null;
         };
 
@@ -213,10 +192,16 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     @Override
                     public void onComplete() {
                         List<Task> tasks = TaskListAdapter.mDataset;
-                        int k = 0;
                         for (int i = 0; i < tasks.size(); i++) {
-                            taskDao.addTask(new Task(i + 1, tasks.get(i).getText(), tasks.get(i).getTaskDescription()));
+                            taskDao.addTask(new Task(i+1, tasks.get(i).getText(), tasks.get(i).getTaskDescription()));
+                            List<SubTask> allSubTasks = subTaskDao.getAllSubTasks(tasks.get(i).getId());
+//                            for (int j = 0; j < allSubTasks.size(); j++) {
+//                                allSubTasks.get(j).setTaskid(i+1);
+//                                subTasks.add(allSubTasks.get(j));
+//                            }
+//
                         }
+//                        subTaskDao.updateAllSubtasks(subTasks);
 
                     }
 
@@ -226,35 +211,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     }
                 }
         );
-        Callable<Void> clb1 = () -> {
-            subTaskDao.deleleAllSubtasks();
-            return null;
-        };
-        Completable.fromCallable(clb1).subscribe(
-                new DisposableCompletableObserver() {
-
-                    @Override
-                    public void onComplete() {
-                        List<Task> tasks = TaskListAdapter.mDataset;
-                        int k = 0;
-                        for (int i = 0; i < tasks.size(); i++) {
-                            for (int j = 0; j < subtasks.get(i).size(); j++) {
-                                subTaskDao.addSubTask(new SubTask(k, i + 1, subtasks.get(i).get(j).subTaskText));
-                                k++;
-                            }
-                        }
-                        for (int i = 0; i < tasks.size(); i++) {
-                            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
-                        }
-                        System.out.println(subtasks);
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                }
-        );
-        super.onDestroy();
+        super.onPause();
     }
 }
 

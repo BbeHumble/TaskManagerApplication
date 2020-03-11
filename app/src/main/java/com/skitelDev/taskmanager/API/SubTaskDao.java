@@ -3,6 +3,7 @@ package com.skitelDev.taskmanager.API;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -30,4 +31,6 @@ public interface SubTaskDao {
     List<SubTask> getAllSubTasks(long id);
     @Query("delete from subtasks")
     void deleleAllSubtasks();
+    @Update(onConflict = REPLACE)
+    int updateAllSubtasks(List<SubTask> subTasks);
 }

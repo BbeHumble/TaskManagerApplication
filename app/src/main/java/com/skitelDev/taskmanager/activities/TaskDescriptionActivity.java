@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.R;
+import com.skitelDev.taskmanager.entities.SubTask;
 import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
 
 import java.util.ArrayList;
+
+import static com.skitelDev.taskmanager.activities.MainActivity.subTaskDao;
 
 public class TaskDescriptionActivity extends AppCompatActivity {
 
@@ -101,6 +104,32 @@ public class TaskDescriptionActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (subtasksIds.length == SubTaskAdapter.mDataset.size()) {
+            for (int i = 0; i < SubTaskAdapter.mDataset.size(); i++) {
+                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+            }
+        }
+        if (subtasksIds.length < SubTaskAdapter.mDataset.size()) {
+            for (int i = 0; i < subtasksIds.length; i++) {
+                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+            }
+            for (int i = subtasksIds.length; i < SubTaskAdapter.mDataset.size(); i++) {
+                subTaskDao.addSubTask(new SubTask(id, SubTaskAdapter.mDataset.get(i)));
+            }
+        }
+        if (subtasksIds.length > SubTaskAdapter.mDataset.size()) {
+            for (int i = 0; i < SubTaskAdapter.mDataset.size(); i++) {
+                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+            }
+            for (int i = SubTaskAdapter.mDataset.size(); i < subtasksIds.length; i++) {
+                subTaskDao.deleteSubTask(subtasksIds[i]);
+            }
+        }
+    }
+
     private void deleteAndExit(int pos) {
         Intent intent = new Intent(TaskDescriptionActivity.this, MainActivity.class);
         Bundle bundle = new Bundle();
@@ -122,7 +151,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
             SubTaskAdapter.mDataset.remove("");
         }
         bundle.putLongArray("prev_subtaks_ids", subtasksIds);
-        bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
+//        bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
