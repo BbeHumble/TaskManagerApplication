@@ -31,6 +31,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         mInflater = LayoutInflater.from(context);
         mDataset = tasks;
     }
+
     @Override
     public TaskListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
@@ -44,7 +45,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         holder.taskname.setText(mDataset.get(position).getText());
         holder.taskDescription.setText(mDataset.get(position).getTaskDescription());
         Random rnd = new Random();
-        int paint  = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        int paint = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
 //        if(mDataset.get(position).getSubtasks()!=null) {
@@ -77,14 +78,17 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+        MainActivity.onMove(fromPosition, toPosition);
     }
 
+
     public static class MyViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder{
+            ItemTouchHelperViewHolder {
         TextView taskname;
         TextView taskDescription;
         Button colorBubble;
         Button imageView;
+
         MyViewHolder(View v) {
             super(v);
             taskname = itemView.findViewById(R.id.taskTitle);

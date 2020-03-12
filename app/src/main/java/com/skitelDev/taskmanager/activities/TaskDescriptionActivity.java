@@ -39,6 +39,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     int pos;
     String taskname;
     long[] subtasksIds;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +148,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         bundle.putString("name", taskField.getText().toString());
         bundle.putInt("pos", pos);
         bundle.putString("desc", desc.getText().toString());
-        if(SubTaskAdapter.mDataset!=null) {
+        if (SubTaskAdapter.mDataset != null) {
             SubTaskAdapter.mDataset.remove("");
         }
         bundle.putLongArray("prev_subtaks_ids", subtasksIds);
@@ -167,10 +168,10 @@ public class TaskDescriptionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(taskField.getText().toString().trim().equals("")){
+        if (taskField.getText().toString().trim().equals("")) {
             deleteAndExit(pos);
-        }else {
-            saveAndExit(id,pos);
+        } else {
+            saveAndExit(id, pos);
         }
     }
 

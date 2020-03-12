@@ -17,7 +17,7 @@ public interface TaskDao {
     @Insert(onConflict = REPLACE)
     long addTask(Task task);
 
-    @Update
+    @Update(onConflict = REPLACE)
     void updateTask(Task task);
 
     @Delete

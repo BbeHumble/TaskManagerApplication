@@ -31,6 +31,7 @@ import com.skitelDev.taskmanager.recycleViewHolders.SimpleItemTouchHelperCallbac
 import com.skitelDev.taskmanager.recycleViewHolders.TaskListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -161,6 +162,24 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         recyclerView.bringToFront();
     }
 
+    public static void onMove(int from, int to) {
+        Task task1 = TaskListAdapter.mDataset.get(from);
+        Task task2 = TaskListAdapter.mDataset.get(to);
+        taskDao.updateTask(new Task(task1.getId(), task2.getText(), task2.getTaskDescription()));
+        taskDao.updateTask(new Task(task2.getId(), task1.getText(), task1.getTaskDescription()));
+        List<SubTask> taski = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(from).getId());
+        List<SubTask> taskiplus1 = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(to).getId());
+        for (int j = 0; j < taski.size(); j++) {
+            subTaskDao.addSubTask(new SubTask(taski.get(j).id, taski.get(j).getTaskid(), taskiplus1.get(j).getSubTaskText()));
+        }
+        for (int j = 0; j < taskiplus1.size(); j++) {
+            subTaskDao.addSubTask(new SubTask(taskiplus1.get(j).id, taskiplus1.get(j).getTaskid(), taski.get(j).getSubTaskText()));
+        }
+
+
+    }
+
+
     public void TaskListLoader(List<Task> list) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
@@ -172,46 +191,5 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         recyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onPause() {
-//        ArrayList<ArrayList<SubTask>> subtasks = new ArrayList<>();
-//        List<Task> tasks = TaskListAdapter.mDataset;
-//        for (int i = 0; i < tasks.size(); i++) {
-//            subtasks.add((ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(i).getId()));
-//        }
-        ArrayList<SubTask> subTasks = new ArrayList<>();
-        Callable<Void> clb = () -> {
-            taskDao.deleteAllTasks();
-//            subTaskDao.deleleAllSubtasks();
-            return null;
-        };
-
-        Completable.fromCallable(clb).subscribe(
-                new DisposableCompletableObserver() {
-
-                    @Override
-                    public void onComplete() {
-                        List<Task> tasks = TaskListAdapter.mDataset;
-                        for (int i = 0; i < tasks.size(); i++) {
-                            taskDao.addTask(new Task(i+1, tasks.get(i).getText(), tasks.get(i).getTaskDescription()));
-                            List<SubTask> allSubTasks = subTaskDao.getAllSubTasks(tasks.get(i).getId());
-//                            for (int j = 0; j < allSubTasks.size(); j++) {
-//                                allSubTasks.get(j).setTaskid(i+1);
-//                                subTasks.add(allSubTasks.get(j));
-//                            }
-//
-                        }
-//                        subTaskDao.updateAllSubtasks(subTasks);
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                }
-        );
-        super.onPause();
-    }
 }
 
