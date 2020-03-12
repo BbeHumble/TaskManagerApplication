@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 taskname = getIntent().getExtras().getString("name");
                 pos = getIntent().getExtras().getInt("pos");
                 desc = getIntent().getExtras().getString("desc");
-                dataset.set(pos, new Task(id, taskname, desc));
+                TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc));
                 taskDao.updateTask(TaskListAdapter.mDataset.get(pos));
                 TaskListLoader(TaskListAdapter.mDataset);
                 mAdapter.notifyItemChanged(pos);

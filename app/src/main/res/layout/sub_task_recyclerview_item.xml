@@ -11,7 +11,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="false"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="text"
+        android:singleLine="false" />
 
     <Button
         android:id="@+id/delete_subtask"
