@@ -71,14 +71,26 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(mDataset, i, i + 1);
+                long id1 = mDataset.get(i).getId();
+                long id2 = mDataset.get(i + 1).getId();
+                mDataset.get(i+1).setId(id1);
+                mDataset.get(i).setId(id2);
+
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(mDataset, i, i - 1);
+                long id1 = mDataset.get(i).getId();
+                long id2 = mDataset.get(i - 1).getId();
+                mDataset.get(i-1).setId(id1);
+                mDataset.get(i).setId(id2);
             }
         }
+        SimpleItemTouchHelperCallback.from = fromPosition;
+        SimpleItemTouchHelperCallback.to = toPosition;
         notifyItemMoved(fromPosition, toPosition);
-        MainActivity.onMove(fromPosition, toPosition);
+        MainActivity.onMove((ArrayList<Task>) TaskListAdapter.mDataset,fromPosition,toPosition);
+
     }
 
 

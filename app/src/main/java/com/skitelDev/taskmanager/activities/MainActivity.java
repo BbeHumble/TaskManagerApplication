@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
     String desc;
     static TaskDao taskDao;
     static SubTaskDao subTaskDao;
-
+//https://stackoverflow.com/questions/55949538/update-onmove-changes-in-recycler-view-data-to-room-database
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         taskDao = taskManagerDatabase.getTaskDao();
         subTaskDao = taskManagerDatabase.getSubTaskDao();
         dataset = taskManagerDatabase.getTaskDao().getAllTasks();
+        for (int i = 0; i <dataset.size() ; i++) {
+            dataset.get(i).setSubTaskList(subTaskDao.getAllSubTasks(dataset.get(i).getId()));
+        }
         if (getIntent().getExtras() == null)
             TaskListLoader(dataset);
         if (getIntent().getExtras() != null) {
@@ -75,9 +78,10 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                 taskname = getIntent().getExtras().getString("name");
                 pos = getIntent().getExtras().getInt("pos");
                 desc = getIntent().getExtras().getString("desc");
-                TaskListAdapter.mDataset.set(pos, new Task(id, taskname, desc));
-                taskDao.updateTask(TaskListAdapter.mDataset.get(pos));
-                TaskListLoader(TaskListAdapter.mDataset);
+                dataset.set(pos, new Task(id, taskname, desc));
+                dataset.get(pos).setSubTaskList(subTaskDao.getAllSubTasks(dataset.get(pos).getId()));
+                taskDao.updateTask(dataset.get(pos));
+                TaskListLoader(dataset);
                 mAdapter.notifyItemChanged(pos);
             } else {
                 TaskListLoader(dataset);
@@ -96,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     bundle.putInt("pos", position);
                     bundle.putString("desc", TaskListAdapter.mDataset.get(position).getTaskDescription());
                     ArrayList<String> subtasksStrings = new ArrayList<>();
-                    ArrayList<SubTask> subTasks = (ArrayList<SubTask>) subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(position).getId());
+                    ArrayList<SubTask> subTasks = (ArrayList<SubTask>) TaskListAdapter.mDataset.get(position).getSubTaskList();
+
                     long[] subtasksIds = new long[subTasks.size()];
                     for (int i = 0; i < subTasks.size(); i++) {
                         subtasksStrings.add(subTasks.get(i).getSubTaskText());
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
                     }
                     bundle.putLongArray("subtasks_ids", subtasksIds);
                     bundle.putStringArrayList("subtasks", subtasksStrings);
+
                     intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
@@ -117,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         if (!newTaskText.trim().equals("")) {
             int index = taskDao.getAllTasks().size() + 1;
             Task task = new Task(index, newTaskText, desc);
+            task.setSubTaskList(new ArrayList<>());
             TaskListAdapter.mDataset.add(task);
             mAdapter.notifyItemInserted(TaskListAdapter.mDataset.size());
             taskDao.addTask(task);
@@ -162,18 +169,34 @@ public class MainActivity extends AppCompatActivity implements BottomDialogFragm
         recyclerView.bringToFront();
     }
 
-    public static void onMove(int from, int to) {
-        Task task1 = TaskListAdapter.mDataset.get(from);
-        Task task2 = TaskListAdapter.mDataset.get(to);
-        taskDao.updateTask(new Task(task1.getId(), task2.getText(), task2.getTaskDescription()));
-        taskDao.updateTask(new Task(task2.getId(), task1.getText(), task1.getTaskDescription()));
-        List<SubTask> taski = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(from).getId());
-        List<SubTask> taskiplus1 = subTaskDao.getAllSubTasks(TaskListAdapter.mDataset.get(to).getId());
-        for (int j = 0; j < taski.size(); j++) {
-            subTaskDao.addSubTask(new SubTask(taski.get(j).id, taski.get(j).getTaskid(), taskiplus1.get(j).getSubTaskText()));
+    public static void onMove(ArrayList<Task> tasks, int from, int to) {
+        for (int i = 0; i <tasks.size() ; i++) {
+            taskDao.addTask(tasks.get(i));
         }
-        for (int j = 0; j < taskiplus1.size(); j++) {
-            subTaskDao.addSubTask(new SubTask(taskiplus1.get(j).id, taskiplus1.get(j).getTaskid(), taski.get(j).getSubTaskText()));
+////        Task task1 = TaskListAdapter.mDataset.get(from);
+////        Task task2 = TaskListAdapter.mDataset.get(to);
+////        taskDao.addTask(new Task(task1.getId(), task2.getText(), task2.getTaskDescription()));
+////        taskDao.addTask(new Task(task2.getId(), task1.getText(), task1.getTaskDescription()));
+        List<SubTask> subTasks1 = subTaskDao.getAllSubTasks(tasks.get(from).getId());
+        List<SubTask> subTasks2 = subTaskDao.getAllSubTasks(tasks.get(to).getId());
+        if (subTasks1.size() != 0 && subTasks2.size() != 0) {
+            for (int j = 0; j < subTasks1.size(); j++) {
+                subTaskDao.addSubTask(new SubTask(subTasks1.get(j).id, tasks.get(to).getId(), subTasks1.get(j).getSubTaskText()));
+
+            }
+            for (int j = 0; j < subTasks2.size(); j++) {
+                subTaskDao.addSubTask(new SubTask(subTasks2.get(j).id, tasks.get(from).getId(), subTasks2.get(j).getSubTaskText()));
+            }
+        }
+         else if (subTasks2.size() == 0 && subTasks1.size() != 0) {
+            for (int j = 0; j < subTasks1.size(); j++) {
+                subTaskDao.addSubTask(new SubTask(subTasks1.get(j).id, TaskListAdapter.mDataset.get(to).getId(), subTasks1.get(j).getSubTaskText()));
+            }
+        }
+        else if (subTasks1.size()==0 && subTasks2.size()!=0){
+            for (int j = 0; j < subTasks2.size(); j++) {
+                subTaskDao.addSubTask(new SubTask(subTasks2.get(j).id, TaskListAdapter.mDataset.get(from).getId(), subTasks2.get(j).getSubTaskText()));
+            }
         }
 
 

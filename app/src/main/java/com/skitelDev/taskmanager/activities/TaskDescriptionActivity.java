@@ -21,6 +21,7 @@ import com.skitelDev.taskmanager.entities.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.skitelDev.taskmanager.activities.MainActivity.subTaskDao;
 
@@ -106,8 +107,8 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if (subtasksIds.length == SubTaskAdapter.mDataset.size()) {
             for (int i = 0; i < SubTaskAdapter.mDataset.size(); i++) {
                 subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
@@ -152,7 +153,7 @@ public class TaskDescriptionActivity extends AppCompatActivity {
             SubTaskAdapter.mDataset.remove("");
         }
         bundle.putLongArray("prev_subtaks_ids", subtasksIds);
-//        bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
+        bundle.putStringArrayList("subtasks", SubTaskAdapter.mDataset);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();

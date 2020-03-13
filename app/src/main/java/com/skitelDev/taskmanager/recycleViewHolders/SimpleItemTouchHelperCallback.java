@@ -4,9 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.skitelDev.taskmanager.activities.MainActivity;
+import com.skitelDev.taskmanager.entities.Task;
+
+import java.util.ArrayList;
+
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
-
+    static int from;
+   static int to;
     private final ItemTouchHelperAdapter mAdapter;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
@@ -56,11 +62,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        if (viewHolder instanceof ItemTouchHelperViewHolder) {
-            ItemTouchHelperViewHolder itemViewHolder =
-                    (ItemTouchHelperViewHolder) viewHolder;
-            itemViewHolder.onItemClear();
-        }
+
+
 
     }
 }

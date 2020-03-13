@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+
 @Entity(tableName = "tasks")
 public class Task {
 
@@ -15,7 +17,8 @@ public class Task {
     private String text;
     @ColumnInfo(name = "task_description")
     private String taskDescription;
-
+    @Ignore
+    private List<SubTask> subTaskList;
     public Task(long id, String text, String taskDescription) {
         this.id = id;
         this.text = text;
@@ -24,6 +27,14 @@ public class Task {
 
     @Ignore
     public Task() {
+    }
+
+    public List<SubTask> getSubTaskList() {
+        return subTaskList;
+    }
+
+    public void setSubTaskList(List<SubTask> subTaskList) {
+        this.subTaskList = subTaskList;
     }
 
     public long getId() {
