@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.entities;
+package com.skitelDev.taskmanager.data.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey;
 import java.util.List;
 
 @Entity(tableName = "tasks")
-public class Task {
+public
+class Task {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "task_id")
@@ -19,6 +20,7 @@ public class Task {
     private String taskDescription;
     @Ignore
     private List<SubTask> subTaskList;
+
     public Task(long id, String text, String taskDescription) {
         this.id = id;
         this.text = text;

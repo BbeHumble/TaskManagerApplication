@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -64,6 +65,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment
             BottomSheetDialog d = (BottomSheetDialog) dialog;
             View bottomSheetInternal = d.findViewById(R.id.design_bottom_sheet);
             if (bottomSheetInternal == null) return;
+            newTaskText.setText("");
+            desc.setVisibility(View.GONE);
             BottomSheetBehavior.from(bottomSheetInternal).setState(BottomSheetBehavior.STATE_EXPANDED);
         });
         return view;
@@ -74,9 +77,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ItemClickListener) {
-            mListener = (ItemClickListener) context;
-        }
+        mListener = (ItemClickListener) context;
+
     }
 
     @Override

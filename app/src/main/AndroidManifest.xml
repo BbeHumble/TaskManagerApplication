@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.TaskDescriptionActivity"
+            android:name=".ui.taskDescriptionActivity.TaskDescriptionActivity"
             android:label="@string/title_activity_task_description1"
             android:theme="@style/AppTheme"></activity>
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".ui.taskListActivity.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

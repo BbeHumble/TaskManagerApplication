@@ -1,13 +1,9 @@
-package com.skitelDev.taskmanager.recycleViewHolders;
+package com.skitelDev.taskmanager.ui.taskListActivity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skitelDev.taskmanager.activities.MainActivity;
-import com.skitelDev.taskmanager.entities.Task;
-
-import java.util.ArrayList;
 
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {

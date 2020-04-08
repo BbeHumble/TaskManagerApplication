@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.activities;
+package com.skitelDev.taskmanager.ui.taskDescriptionActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,20 +14,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.skitelDev.taskmanager.R;
-import com.skitelDev.taskmanager.entities.SubTask;
-import com.skitelDev.taskmanager.entities.Task;
+import com.skitelDev.taskmanager.data.Storage;
+import com.skitelDev.taskmanager.data.database.TaskManagerDatabase;
+import com.skitelDev.taskmanager.data.model.SubTask;
+import com.skitelDev.taskmanager.data.model.Task;
 import com.skitelDev.taskmanager.recycleViewHolders.subTaskListAdapters.SubTaskAdapter;
+import com.skitelDev.taskmanager.ui.taskListActivity.MainActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.skitelDev.taskmanager.activities.MainActivity.subTaskDao;
 
-public class TaskDescriptionActivity extends AppCompatActivity {
+public class TaskDescriptionActivity extends AppCompatActivity implements TaskDescriptionView {
 
-    Task task;
     TextView taskField;
     Button exitbutton;
     EditText desc;
@@ -36,31 +37,28 @@ public class TaskDescriptionActivity extends AppCompatActivity {
     SubTaskAdapter subTaskAdapter;
     ArrayList<String> dataset;
     Button addSubTask;
-    long id;
     int pos;
-    String taskname;
     long[] subtasksIds;
-
+    Storage storage;
+    TaskDescriptionPresenter presenter;
+    Task currentTask;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_description);
-        id = getIntent().getExtras().getLong("id");
-        taskname = getIntent().getExtras().getString("name");
+        storage = provideStorage();
+        presenter = new TaskDescriptionPresenter(this, storage);
+        currentTask = new Task();
+        currentTask.setId(getIntent().getExtras().getLong("id"));
+        currentTask.setText(getIntent().getExtras().getString("name"));
         pos = getIntent().getExtras().getInt("pos");
-        final String taskDescription = getIntent().getExtras().getString("desc");
+        currentTask.setTaskDescription(getIntent().getExtras().getString("desc"));
         dataset = getIntent().getExtras().getStringArrayList("subtasks");
         subtasksIds = getIntent().getExtras().getLongArray("subtasks_ids");
-        subtasks = findViewById(R.id.subTask);
-        TaskListLoader(dataset);
-        addSubTask = findViewById(R.id.addSubTask);
-        task = new Task(id, taskname, taskDescription);
-        taskField = findViewById(R.id.taskField);
-        taskField.setText(taskname);
-        taskField.clearFocus();
-        desc = findViewById(R.id.taskDescription);
-        desc.setText(taskDescription);
-        exitbutton = findViewById(R.id.exit);
+        initItems(currentTask);
+        presenter.getAllSubTasks(dataset);
+
+
         if (SubTaskAdapter.mDataset != null) {
             subtasks.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -70,12 +68,12 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         }
         exitbutton.setOnClickListener(view -> {
             if (!taskField.getText().toString().equals("")) {
-                saveAndExit(id, pos);
+                saveAndExit(currentTask.getId(), pos);
             } else {
                 deleteAndExit(pos);
             }
         });
-        deleteTask = findViewById(R.id.deleteTask);
+
         deleteTask.setOnClickListener(view -> {
             deleteAndExit(pos);
         });
@@ -106,28 +104,41 @@ public class TaskDescriptionActivity extends AppCompatActivity {
 
     }
 
+    private void initItems(Task currentTask) {
+        subtasks = findViewById(R.id.subTask);
+        deleteTask = findViewById(R.id.deleteTask);
+        addSubTask = findViewById(R.id.addSubTask);
+        taskField = findViewById(R.id.taskField);
+        desc = findViewById(R.id.taskDescription);
+        exitbutton = findViewById(R.id.exit);
+        taskField.setText(currentTask.getText());
+        taskField.clearFocus();
+        desc.setText(currentTask.getTaskDescription());
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         if (subtasksIds.length == SubTaskAdapter.mDataset.size()) {
             for (int i = 0; i < SubTaskAdapter.mDataset.size(); i++) {
-                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+
+                presenter.updateSubTask(new SubTask(subtasksIds[i], currentTask.getId(), SubTaskAdapter.mDataset.get(i)));
             }
         }
         if (subtasksIds.length < SubTaskAdapter.mDataset.size()) {
             for (int i = 0; i < subtasksIds.length; i++) {
-                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+                presenter.updateSubTask(new SubTask(subtasksIds[i], currentTask.getId(), SubTaskAdapter.mDataset.get(i)));
             }
             for (int i = subtasksIds.length; i < SubTaskAdapter.mDataset.size(); i++) {
-                subTaskDao.addSubTask(new SubTask(id, SubTaskAdapter.mDataset.get(i)));
+                presenter.addSubTask(new SubTask(currentTask.getId(), SubTaskAdapter.mDataset.get(i)));
             }
         }
         if (subtasksIds.length > SubTaskAdapter.mDataset.size()) {
             for (int i = 0; i < SubTaskAdapter.mDataset.size(); i++) {
-                subTaskDao.updateSubTask(new SubTask(subtasksIds[i], id, SubTaskAdapter.mDataset.get(i)));
+                presenter.updateSubTask(new SubTask(subtasksIds[i], currentTask.getId(), SubTaskAdapter.mDataset.get(i)));
             }
             for (int i = SubTaskAdapter.mDataset.size(); i < subtasksIds.length; i++) {
-                subTaskDao.deleteSubTask(subtasksIds[i]);
+                presenter.deleteSubTask(subtasksIds[i]);
             }
         }
     }
@@ -159,21 +170,30 @@ public class TaskDescriptionActivity extends AppCompatActivity {
         finish();
     }
 
-    public void TaskListLoader(ArrayList<String> list) {
+    @Override
+    public void onBackPressed() {
+        if (taskField.getText().toString().trim().equals("")) {
+            deleteAndExit(pos);
+        } else {
+            saveAndExit(currentTask.getId(), pos);
+        }
+    }
+
+    Storage provideStorage() {
+        final TaskManagerDatabase database = Room.databaseBuilder(this, TaskManagerDatabase.class, "TaskManagerDB")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+        return new Storage(database.getTaskDao(), database.getSubTaskDao());
+    }
+
+    @Override
+    public void showTaskInfo(ArrayList<String> list) {
+        dataset = list;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         subtasks.setLayoutManager(layoutManager1);
         subTaskAdapter = new SubTaskAdapter(getApplicationContext(), list);
         subtasks.setAdapter(subTaskAdapter);
     }
-
-    @Override
-    public void onBackPressed() {
-        if (taskField.getText().toString().trim().equals("")) {
-            deleteAndExit(pos);
-        } else {
-            saveAndExit(id, pos);
-        }
-    }
-
 }

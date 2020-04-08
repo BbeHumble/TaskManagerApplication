@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.API;
+package com.skitelDev.taskmanager.data.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.skitelDev.taskmanager.entities.Task;
+import com.skitelDev.taskmanager.data.model.Task;
 
 import java.util.List;
 
@@ -29,8 +29,10 @@ public interface TaskDao {
 
     @Query("select * from tasks where task_id ==:id")
     Task getTask(long id);
+
     @Query("delete from tasks")
     void deleteAllTasks();
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateAll(List<Task> tasks);
 }

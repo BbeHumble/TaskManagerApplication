@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.recycleViewHolders;
+package com.skitelDev.taskmanager.ui.taskListActivity;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,15 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skitelDev.taskmanager.R;
-import com.skitelDev.taskmanager.activities.MainActivity;
-import com.skitelDev.taskmanager.entities.Task;
+import com.skitelDev.taskmanager.data.model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,21 +46,28 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         int paint = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         StateListDrawable shapeDrawable = (StateListDrawable) holder.colorBubble.getBackground();
         shapeDrawable.setColorFilter(paint, PorterDuff.Mode.MULTIPLY);
-//        if(mDataset.get(position).getSubtasks()!=null) {
-//            if (mDataset.get(position).getSubtasks().size() != 0) {
-//                holder.imageView.setVisibility(View.VISIBLE);
-//            } else {
-//                holder.imageView.setVisibility(View.INVISIBLE);
-//            }
-//        }
-//        else {
-//            holder.imageView.setVisibility(View.INVISIBLE);
-//        }
+/*
+        if(mDataset.get(position).getSubtasks()!=null) {
+            if (mDataset.get(position).getSubtasks().size() != 0) {
+                holder.imageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.imageView.setVisibility(View.INVISIBLE);
+            }
+        }
+        else {
+            holder.imageView.setVisibility(View.INVISIBLE);
+        }
+*/
     }
-
+    public void addData(List<Task> mDataset1) {
+        mDataset.clear();
+        mDataset.addAll(mDataset1);
+        notifyDataSetChanged();
+    }
     @Override
     public void onItemDismiss(int position) {//удаление
-        MainActivity.deleteItem(position);
+        MainActivity.presenter.deleteTask(TaskListAdapter.mDataset.get(position));
+        notifyItemRemoved(position);
     }
 
 
@@ -89,8 +94,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         SimpleItemTouchHelperCallback.from = fromPosition;
         SimpleItemTouchHelperCallback.to = toPosition;
         notifyItemMoved(fromPosition, toPosition);
-        MainActivity.onMove((ArrayList<Task>) TaskListAdapter.mDataset,fromPosition,toPosition);
-
+        MainActivity.presenter.moveTask(fromPosition, toPosition);
     }
 
 

@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.recycleViewHolders;
+package com.skitelDev.taskmanager.ui.taskListActivity;
 
 interface ItemTouchHelperAdapter {
     void onItemDismiss(int position);

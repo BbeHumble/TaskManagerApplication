@@ -1,4 +1,4 @@
-package com.skitelDev.taskmanager.recycleViewHolders;
+package com.skitelDev.taskmanager.ui.taskListActivity;
 
 import android.content.Context;
 import android.view.GestureDetector;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="8dp"
     android:background="#BBBBBB"
-    tools:context=".activities.MainActivity">
+    tools:context=".ui.taskListActivity.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
